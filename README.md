@@ -1,4 +1,4 @@
-# Nombre del juego (<- borrar y completar)
+# Clicker Hero
 
 ## Equipo de desarrollo
 
