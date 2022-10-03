@@ -1,4 +1,4 @@
-# Clicker Hero
+# "Clicker Hero"
 
 ## Equipo de desarrollo
 
