@@ -1,7 +1,0 @@
-import wollok.game.*
-import personajes.*
-import juego.*
-
-program clickerHero {
-	juego.iniciar()
-}
