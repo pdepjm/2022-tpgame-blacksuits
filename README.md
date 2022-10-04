@@ -2,9 +2,11 @@
 
 ## Equipo de desarrollo
 
-- Alguien
-- Persona
-- etc.
+- Franco Modesto
+- Matias Oliva
+- Juan Pablo Castiglione
+- Maria Guadalupe Fernandez
+- Abril Caruso
 
 ## Capturas
 
@@ -17,6 +19,6 @@
 
 ## Otros
 
-- Curso/Facultad
-- Versión de wollok
-- Una vez terminado, no tenemos problemas en que el repositorio sea público / queremos manternerlo privado
+- K2004/K2104
+- 3.0.0
+- Una vez terminado, no tenemos problemas en que el repositorio sea público
