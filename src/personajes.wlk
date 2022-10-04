@@ -1,7 +1,20 @@
 import wollok.game.*
 
 /* Escenario */
+object escenarioFondo {
+	method position() = game.at(0,0)
+	method image() = "fondo.jpg"
+}
+
+object escenarioRonda {
+	method position() = game.at(1,9)
+	method text() = "-Ronda: " + escenario.ronda()
+	method textColor() = "008000"
+}
+
 object escenario {
+	const enemigos = #{demonio, helado}
+	var randomEnemigo = 0
 	var ronda = 1
 	var enemigo = new Enemigo(especie = demonio)
 	
@@ -10,24 +23,16 @@ object escenario {
 	
 	method siguienteRonda() {
 		ronda += 1
-		if(ronda == 2){
-			enemigo = new Enemigo(especie = helado)
-		} else if(ronda == 3){
+		randomEnemigo = 1.randomUpTo(enemigos.size()+1).truncate(0)
+		if(randomEnemigo == 1){
 			enemigo = new Enemigo(especie = demonio)
-		} else if(ronda == 4){
+		} else if(randomEnemigo == 2){
 			enemigo = new Enemigo(especie = helado)
-		} else {
-			enemigo = new Enemigo(especie = demonio)
 		}
 		game.addVisual(enemigo)
+		enemigoBarraVida.actualizarBarraVida()
 		enemigo.iniciarAtaques()
 	}
-}
-
-object escenarioRonda {
-	method position() = game.at(4,9)
-	method text() = "-Ronda: " + escenario.ronda()
-	method textColor() = "008000"
 }
 
 /* Monedas */
@@ -38,37 +43,90 @@ object monedas {
 		cantidad = _cantidad
 	}
 
-	method position() = game.at(6,5)
+	method position() = game.at(6,2)
 	method image() = "monedas.png"
 }
 
 /* Héroe */
-object heroStats {
-	method position() = game.at(2,9)
-	method text() = "-Vida: " + hero.vida() + "    -Ataque: " + hero.ataque() + "    -Defensa: " + hero.defensa() + "    -Lentitud: " + hero.lentitud()
+object heroBarraVida {
+	var image = "barra_vida100.png"
+	
+	method position() = game.at(1,8)
+	
+	method image() = image
+	
+	method actualizarBarraVida() {
+		if(hero.vida() > 90){
+			image = "barra_vida100.png"
+		} else if(hero.vida() <= 90 && hero.vida() > 80){
+			image = "barra_vida90.png"
+		} else if(hero.vida() <= 80 && hero.vida() > 70){
+			image = "barra_vida80.png"
+		} else if(hero.vida() <= 70 && hero.vida() > 60){
+			image = "barra_vida70.png"
+		} else if(hero.vida() <= 60 && hero.vida() > 50){
+			image = "barra_vida60.png"
+		} else if(hero.vida() <= 50 && hero.vida() > 40){
+			image = "barra_vida50.png"
+		} else if(hero.vida() <= 40 && hero.vida() > 30){
+			image = "barra_vida40.png"
+		} else if(hero.vida() <= 30 && hero.vida() > 20){
+			image = "barra_vida30.png"
+		} else if(hero.vida() <= 20 && hero.vida() > 10){
+			image = "barra_vida20.png"
+		} else if(hero.vida() <= 10 && hero.vida() > 0) {
+			image = "barra_vida10.png"
+		} else {
+			image = "barra_vida0.png"
+		}
+	}
+}
+
+object heroAtaque {
+	method position() = game.at(1,7)
+	method text() = "-Ataque: " + hero.ataque()
 	method textColor() = "288BA8"
 }
 
+object heroDefensa {
+	method position() = game.at(1,6)
+	method text() = "-Defensa: " + hero.defensa()
+	method textColor() = "008000"
+}
+
+object heroVelocidad {
+	method position() = game.at(1,5)
+	method text() = "-Velocidad: " + (5 - hero.lentitud())
+	method textColor() = "FFFFFF"
+}
+
 object heroMonedero {
-	method position() = game.at(2,8)
+	method position() = game.at(1,4)
 	method text() = "-Monedas: " + hero.monedero()
 	method textColor() = "FFCE30"
 }
 
 object heroChat {
-	method position() = game.at(2,6)
+	var position =  game.at(2,3)
+	
+	method position() = position
+	
+	method position(_position) {
+		position = _position
+	}
 }
 
 object hero {
 	var vida = 100
-	var ataque = 10
-	var lentitud = 1
+	var ataque = 50
+	var lentitud = 2 /* Máx. 4 */
 	var defensa = 0
 	var monedero = 0
 	var puedeAtacar = true
+	var muerto = false
 	
 	var image = "hero.png"
-	var position = game.at(2,5)
+	var position = game.at(2,2)
 
 	method position() = position
 	method image() = image
@@ -80,13 +138,15 @@ object hero {
 	method monedero() = monedero
 	
 	method atacar() {
-		if(puedeAtacar && escenario.enemigo().vida() > 0){
+		if(puedeAtacar && escenario.enemigo().vida() > 0 && !muerto){
 			puedeAtacar = false
 			escenario.enemigo().recibirDanio(ataque)
 			image = "hero_atk.png"
-			position = game.at(4,5)
-			game.schedule(lentitud * 1000, {image = "hero.png"})
-			game.schedule(lentitud * 1000, {position = game.at(2,5)})
+			position = game.at(4,2)
+			heroChat.position(game.at(4,3))
+			game.schedule((lentitud * 1000)/2, {image = "hero.png"})
+			game.schedule((lentitud * 1000)/2, {position = game.at(2,2)})
+			game.schedule((lentitud * 1000)/2, {heroChat.position(game.at(2,3))})
 			game.schedule(lentitud * 1000, {puedeAtacar = true})
 		}
 	}
@@ -95,13 +155,75 @@ object hero {
 		monedero += cantidad
 		game.say(heroChat, "Obtuve " + cantidad + " monedas!")
 	}
+	
+	method recibirDanio(danio) {
+		if((danio - defensa) > 0){
+			vida -= (danio - defensa)
+			heroBarraVida.actualizarBarraVida()
+			if (vida <= 0) {
+				vida = 0
+				self.morir()
+			}
+		}
+	}
+	
+	method morir(){
+		muerto = true
+		game.removeTickEvent("ataque")
+	}
 }
 
 /* Enemigos */
-object enemigoStats {
-	method position() = game.at(7,9)
-	method text() = "-Vida: " + escenario.enemigo().vida() + "    -Ataque: " + escenario.enemigo().especie().ataque() + "    -Defensa: " + escenario.enemigo().especie().defensa() + "    -Lentitud: " + escenario.enemigo().especie().lentitud()
-	method textColor() = "E83845"
+object enemigoBarraVida {
+	var image = "barra_vida_inv100.png"
+	
+	method position() = game.at(7,8)
+	
+	method image() = image
+	
+	method actualizarBarraVida() {
+		if(escenario.enemigo().vida() > 90){
+			image = "barra_vida_inv100.png"
+		} else if(escenario.enemigo().vida() <= 90 && escenario.enemigo().vida() > 80){
+			image = "barra_vida_inv90.png"
+		} else if(escenario.enemigo().vida() <= 80 && escenario.enemigo().vida() > 70){
+			image = "barra_vida_inv80.png"
+		} else if(escenario.enemigo().vida() <= 70 && escenario.enemigo().vida() > 60){
+			image = "barra_vida_inv70.png"
+		} else if(escenario.enemigo().vida() <= 60 && escenario.enemigo().vida() > 50){
+			image = "barra_vida_inv60.png"
+		} else if(escenario.enemigo().vida() <= 50 && escenario.enemigo().vida() > 40){
+			image = "barra_vida_inv50.png"
+		} else if(escenario.enemigo().vida() <= 40 && escenario.enemigo().vida() > 30){
+			image = "barra_vida_inv40.png"
+		} else if(escenario.enemigo().vida() <= 30 && escenario.enemigo().vida() > 20){
+			image = "barra_vida_inv30.png"
+		} else if(escenario.enemigo().vida() <= 20 && escenario.enemigo().vida() > 10){
+			image = "barra_vida_inv20.png"
+		} else if(escenario.enemigo().vida() <= 10 && escenario.enemigo().vida() > 0) {
+			image = "barra_vida_inv10.png"
+		} else {
+			image = "barra_vida0.png"
+		}
+	}
+}
+
+object enemigoAtaque {
+	method position() = game.at(8,7)
+	method text() = "-Ataque: " + escenario.enemigo().especie().ataque()
+	method textColor() = "FF0000"
+}
+
+object enemigoDefensa {
+	method position() = game.at(8,6)
+	method text() = "-Defensa: " + escenario.enemigo().especie().defensa()
+	method textColor() = "FF0000"
+}
+
+object enemigoVelocidad {
+	method position() = game.at(8,5)
+	method text() = "-Velocidad: " + (5 - escenario.enemigo().especie().lentitud())
+	method textColor() = "FF0000"
 }
 
 class Enemigo {
@@ -109,7 +231,7 @@ class Enemigo {
 	var vida = especie.vida()
 	
 	var image = especie.originalImage()
-	const position = game.at(5,5)
+	const position = game.at(5,2)
 	
 	method position() = position
 	method image() = image
@@ -128,14 +250,18 @@ class Enemigo {
 	
 	method atacar() {
 		image = especie.atkImage()
-		game.schedule((especie.lentitud() * 1000) - ((especie.lentitud() * 1000) / 2), {image = especie.originalImage()})
+		hero.recibirDanio(especie.ataque())
+		game.schedule((especie.lentitud() * 1000)/2, {image = especie.originalImage()})
 	}
 	
 	method recibirDanio(danio) {
-		vida -= (danio - especie.defensa())
-		if (vida <= 0) {
-			vida = 0
-			self.morir()
+		if((danio - especie.defensa()) > 0) {
+			vida -= (danio - especie.defensa())
+			enemigoBarraVida.actualizarBarraVida()
+			if (vida <= 0) {
+				vida = 0
+				self.morir()
+			}
 		}
 	}
 	
@@ -148,28 +274,28 @@ class Enemigo {
 		game.removeTickEvent("ataque")
 		game.removeVisual(escenario.enemigo())
 		self.soltarMonedas()
-		game.schedule(2000, {game.removeVisual(monedas)})
-		game.schedule(2000, {hero.agarrarMonedas(especie.drop())})
+		game.schedule(1500, {game.removeVisual(monedas)})
+		game.schedule(1500, {hero.agarrarMonedas(especie.drop())})
 		game.schedule(3000, {escenario.siguienteRonda()})
 	}
 }
 
 /* Especies de Enemigos */
 object demonio {
-	method vida() = 10 + (100 * escenario.ronda()/10)
-	method ataque() = 20
-	method lentitud() = 2
-	method defensa() = 0
+	method vida() = 100
+	method ataque() = 100 * escenario.ronda()/10
+	method lentitud() = 2 /* Máx. 4 */
+	method defensa() = 10 * escenario.ronda()/10
 	method drop() = 2 * escenario.ronda()
 	method originalImage() = "enemy1.png"
 	method atkImage() = "enemy1_atk.png"
 }
 
 object helado {
-	method vida() = 10 + (100 * escenario.ronda()/10)
-	method ataque() = 10
-	method lentitud() = 3
-	method defensa() = 5
+	method vida() = 100
+	method ataque() = 100 * escenario.ronda()/10
+	method lentitud() = 4 /* Máx. 4 */
+	method defensa() = 20 * escenario.ronda()/10
 	method drop() = 3 * escenario.ronda()
 	method originalImage() = "enemy2.png"
 	method atkImage() = "enemy2_atk.png"

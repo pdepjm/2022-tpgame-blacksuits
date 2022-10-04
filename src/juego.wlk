@@ -12,23 +12,30 @@ object juego {
 		game.title("Clicker Hero")
 		game.width(10)
 		game.height(10)
-		game.cellSize(75)
+		game.cellSize(70)
 		self.agregarPersonajes()
 		self.configurarTeclas()
 		escenario.enemigo().iniciarAtaques()
 	}
 
 	method agregarPersonajes() {
-		self.dibujarStats()
+		self.dibujarEscenario()
 		self.dibujarHero()
 		self.dibujarEnemigo()
 	}
 	
-	method dibujarStats() {
+	method dibujarEscenario() {
+		game.addVisual(escenarioFondo)
 		game.addVisual(escenarioRonda)
-		game.addVisual(heroStats)
+		game.addVisual(heroBarraVida)
+		game.addVisual(heroAtaque)
+		game.addVisual(heroDefensa)
+		game.addVisual(heroVelocidad)
 		game.addVisual(heroMonedero)
-		game.addVisual(enemigoStats)
+		game.addVisual(enemigoBarraVida)
+		game.addVisual(enemigoAtaque)
+		game.addVisual(enemigoDefensa)
+		game.addVisual(enemigoVelocidad)
 	}
 
 	method dibujarHero() {
@@ -41,6 +48,6 @@ object juego {
 	}
 	
 	method configurarTeclas() {
-		keyboard.space().onPressDo({hero.atacar()})
+		keyboard.q().onPressDo({hero.atacar()})
 	}
 }
