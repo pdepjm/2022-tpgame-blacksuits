@@ -16,9 +16,8 @@
 
 (Escribirlas)
 
-
 ## Otros
 
-- K2004/K2104
+- UTN K2004/K2104
 - 3.0.0
-- Una vez terminado, no tenemos problemas en que el repositorio sea público
+- Una vez terminado, no tenemos problemas en que el repositorio sea público.
