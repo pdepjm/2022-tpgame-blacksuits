@@ -7,13 +7,18 @@ object escenarioFondo {
 }
 
 object escenarioRonda {
-	method position() = game.at(1,9)
-	method text() = "-Ronda: " + escenario.ronda()
-	method textColor() = "008000"
+	method position() = game.at(5,9)
+	method text() = "    - Ronda " + escenario.ronda() + " -"
+	method textColor() = "CA5CDD"
+}
+
+object escenarioRondaLabel {
+	method position() = game.at(4,9)
+	method image() = "label2.png"
 }
 
 object escenario {
-	const enemigos = #{demonio, helado}
+	const especies = #{demonio, helado}
 	var randomEnemigo = 0
 	var ronda = 1
 	var enemigo = new Enemigo(especie = demonio)
@@ -23,7 +28,7 @@ object escenario {
 	
 	method siguienteRonda() {
 		ronda += 1
-		randomEnemigo = 1.randomUpTo(enemigos.size()+1).truncate(0)
+		randomEnemigo = 1.randomUpTo(especies.size()+1).truncate(0)
 		if(randomEnemigo == 1){
 			enemigo = new Enemigo(especie = demonio)
 		} else if(randomEnemigo == 2){
@@ -43,7 +48,7 @@ object monedas {
 		cantidad = _cantidad
 	}
 
-	method position() = game.at(6,2)
+	method position() = game.at(7,2)
 	method image() = "monedas.png"
 }
 
@@ -51,7 +56,7 @@ object monedas {
 object heroBarraVida {
 	var image = "barra_vida100.png"
 	
-	method position() = game.at(1,8)
+	method position() = game.at(1,9)
 	
 	method image() = image
 	
@@ -83,31 +88,55 @@ object heroBarraVida {
 }
 
 object heroAtaque {
-	method position() = game.at(1,7)
-	method text() = "-Ataque: " + hero.ataque()
-	method textColor() = "288BA8"
+	method position() = game.at(2,8)
+	method text() = "                Ataque: " + hero.ataque()
+	method textColor() = "1B7CED"
+	method image() = "label.png"
+}
+
+object heroAtaqueIcon {
+	method position() = game.at(1,8)
+	method image() = "espada.png"
 }
 
 object heroDefensa {
-	method position() = game.at(1,6)
-	method text() = "-Defensa: " + hero.defensa()
-	method textColor() = "008000"
+	method position() = game.at(2,7)
+	method text() = "                Defensa: " + hero.defensa()
+	method textColor() = "74B72E"
+	method image() = "label.png"
+}
+
+object heroDefensaIcon {
+	method position() = game.at(1,7)
+	method image() = "escudo.png"
 }
 
 object heroVelocidad {
-	method position() = game.at(1,5)
-	method text() = "-Velocidad: " + (5 - hero.lentitud())
+	method position() = game.at(2,6)
+	method text() = "                Velocidad: " + (5 - hero.lentitud())
 	method textColor() = "FFFFFF"
+	method image() = "label.png"
+}
+
+object heroVelocidadIcon {
+	method position() = game.at(1,6)
+	method image() = "bota.png"
 }
 
 object heroMonedero {
-	method position() = game.at(1,4)
-	method text() = "-Monedas: " + hero.monedero()
+	method position() = game.at(2,5)
+	method text() = "                 Monedas: " + hero.monedero()
 	method textColor() = "FFCE30"
+ 	method image() = "label.png"
+}
+
+object heroMonederoIcon {
+	method position() = game.at(1,5)
+	method image() = "monedero.png"
 }
 
 object heroChat {
-	var position =  game.at(2,3)
+	var position =  game.at(3,3)
 	
 	method position() = position
 	
@@ -126,7 +155,7 @@ object hero {
 	var muerto = false
 	
 	var image = "hero.png"
-	var position = game.at(2,2)
+	var position = game.at(3,2)
 
 	method position() = position
 	method image() = image
@@ -145,8 +174,8 @@ object hero {
 			position = game.at(4,2)
 			heroChat.position(game.at(4,3))
 			game.schedule((lentitud * 1000)/2, {image = "hero.png"})
-			game.schedule((lentitud * 1000)/2, {position = game.at(2,2)})
-			game.schedule((lentitud * 1000)/2, {heroChat.position(game.at(2,3))})
+			game.schedule((lentitud * 1000)/2, {position = game.at(3,2)})
+			game.schedule((lentitud * 1000)/2, {heroChat.position(game.at(3,3))})
 			game.schedule(lentitud * 1000, {puedeAtacar = true})
 		}
 	}
@@ -177,7 +206,7 @@ object hero {
 object enemigoBarraVida {
 	var image = "barra_vida_inv100.png"
 	
-	method position() = game.at(7,8)
+	method position() = game.at(8,9)
 	
 	method image() = image
 	
@@ -209,21 +238,39 @@ object enemigoBarraVida {
 }
 
 object enemigoAtaque {
-	method position() = game.at(8,7)
-	method text() = "-Ataque: " + escenario.enemigo().especie().ataque()
+	method position() = game.at(8,8)
+	method text() = "                Ataque: " + escenario.enemigo().especie().ataque()
 	method textColor() = "FF0000"
+	method image() = "label.png"
+}
+
+object enemigoAtaqueIcon {
+	method position() = game.at(7,8)
+	method image() = "espada.png"
 }
 
 object enemigoDefensa {
-	method position() = game.at(8,6)
-	method text() = "-Defensa: " + escenario.enemigo().especie().defensa()
+	method position() = game.at(8,7)
+	method text() = "                Defensa: " + escenario.enemigo().especie().defensa()
 	method textColor() = "FF0000"
+	method image() = "label.png"
+}
+
+object enemigoDefensaIcon {
+	method position() = game.at(7,7)
+	method image() = "escudo.png"
 }
 
 object enemigoVelocidad {
-	method position() = game.at(8,5)
-	method text() = "-Velocidad: " + (5 - escenario.enemigo().especie().lentitud())
+	method position() = game.at(8,6)
+	method text() = "                Velocidad: " + (5 - escenario.enemigo().especie().lentitud())
 	method textColor() = "FF0000"
+	method image() = "label.png"
+}
+
+object enemigoVelocidadIcon {
+	method position() = game.at(7,6)
+	method image() = "bota.png"
 }
 
 class Enemigo {
@@ -283,20 +330,20 @@ class Enemigo {
 /* Especies de Enemigos */
 object demonio {
 	method vida() = 100
-	method ataque() = 100 * escenario.ronda()/10
+	method ataque() = 20 * escenario.ronda()/10
 	method lentitud() = 2 /* Máx. 4 */
 	method defensa() = 10 * escenario.ronda()/10
-	method drop() = 2 * escenario.ronda()
+	method drop() = (escenario.ronda()).randomUpTo((2 * escenario.ronda())+1).truncate(0)
 	method originalImage() = "enemy1.png"
 	method atkImage() = "enemy1_atk.png"
 }
 
 object helado {
 	method vida() = 100
-	method ataque() = 100 * escenario.ronda()/10
+	method ataque() = 10 * escenario.ronda()/10
 	method lentitud() = 4 /* Máx. 4 */
 	method defensa() = 20 * escenario.ronda()/10
-	method drop() = 3 * escenario.ronda()
+	method drop() = (escenario.ronda()).randomUpTo((3 * escenario.ronda())+1).truncate(0)
 	method originalImage() = "enemy2.png"
 	method atkImage() = "enemy2_atk.png"
 }
