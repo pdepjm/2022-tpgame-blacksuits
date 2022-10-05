@@ -10,7 +10,7 @@
 
 ## Capturas
 
-(agregar)
+(Agregar)
 
 ## Reglas de Juego / Instrucciones
 
