@@ -18,10 +18,10 @@ object escenarioRondaLabel {
 }
 
 object escenario {
-	const especies = #{demonio, helado}
+	const especies = #{demonio, helado, esqueleto}
 	var randomEnemigo = 0
 	var ronda = 1
-	var enemigo = new Enemigo(especie = demonio)
+	var enemigo = new Enemigo(especie = esqueleto)
 	
 	method ronda() = ronda
 	method enemigo() = enemigo
@@ -30,9 +30,13 @@ object escenario {
 		ronda += 1
 		randomEnemigo = 1.randomUpTo(especies.size()+1).truncate(0)
 		if(randomEnemigo == 1){
+			enemigo = new Enemigo(especie = esqueleto)
+		} else if(randomEnemigo == 2 && ronda >= 5){
 			enemigo = new Enemigo(especie = demonio)
-		} else if(randomEnemigo == 2){
+		} else if(randomEnemigo == 3  && ronda >= 10){
 			enemigo = new Enemigo(especie = helado)
+		} else {
+			enemigo = new Enemigo(especie = esqueleto)
 		}
 		game.addVisual(enemigo)
 		enemigoBarraVida.actualizarBarraVida()
@@ -330,9 +334,9 @@ class Enemigo {
 /* Especies de Enemigos */
 object demonio {
 	method vida() = 100
-	method ataque() = 20 * escenario.ronda()/10
+	method ataque() = 20 * escenario.ronda()/5
 	method lentitud() = 2 /* Máx. 4 */
-	method defensa() = 10 * escenario.ronda()/10
+	method defensa() = 10 * escenario.ronda()/5
 	method drop() = (escenario.ronda()).randomUpTo((2 * escenario.ronda())+1).truncate(0)
 	method originalImage() = "enemy1.png"
 	method atkImage() = "enemy1_atk.png"
@@ -340,10 +344,20 @@ object demonio {
 
 object helado {
 	method vida() = 100
-	method ataque() = 10 * escenario.ronda()/10
+	method ataque() = 10 * escenario.ronda()/5
 	method lentitud() = 4 /* Máx. 4 */
-	method defensa() = 20 * escenario.ronda()/10
+	method defensa() = 20 * escenario.ronda()/5
 	method drop() = (escenario.ronda()).randomUpTo((3 * escenario.ronda())+1).truncate(0)
 	method originalImage() = "enemy2.png"
 	method atkImage() = "enemy2_atk.png"
+}
+
+object esqueleto {
+	method vida() = 100
+	method ataque() = 10 * escenario.ronda()/5
+	method lentitud() = 1 /* Máx. 4 */
+	method defensa() = 5 * escenario.ronda()/5
+	method drop() = (escenario.ronda()).randomUpTo((3 * escenario.ronda())+1).truncate(0)
+	method originalImage() = "enemy3.png"
+	method atkImage() = "enemy3_atk.png"
 }
