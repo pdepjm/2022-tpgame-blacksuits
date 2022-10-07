@@ -18,7 +18,7 @@ object escenarioRondaLabel {
 }
 
 object escenario {
-	const especies = #{demonio, helado, esqueleto}
+	const especies = #{demonio, helado, esqueleto, fantasma}
 	var randomEnemigo = 0
 	var ronda = 1
 	var enemigo = new Enemigo(especie = esqueleto)
@@ -30,18 +30,22 @@ object escenario {
 		ronda += 1
 
 		if(ronda == 2) {
-            enemigo = new Enemigo(especie = demonio)
+            enemigo = new Enemigo(especie = fantasma)
         } else if (ronda == 3) {
+            enemigo = new Enemigo(especie = demonio)
+        } else if (ronda == 4) {
             enemigo = new Enemigo(especie = helado)
         }
         
-        if(ronda > 3){
+        if(ronda > 4){
         	randomEnemigo = 1.randomUpTo(especies.size()+1).truncate(0)
 			if(randomEnemigo == 1){
 				enemigo = new Enemigo(especie = esqueleto)
 			} else if(randomEnemigo == 2){
-				enemigo = new Enemigo(especie = demonio)
+				enemigo = new Enemigo(especie = fantasma)
 			} else if(randomEnemigo == 3){
+				enemigo = new Enemigo(especie = demonio)
+			} else if(randomEnemigo == 4){
 				enemigo = new Enemigo(especie = helado)
 			}
         }
@@ -343,6 +347,28 @@ class Enemigo {
 }
 
 /* Especies de Enemigos */
+object esqueleto {
+	method vida() = 100
+	method ataque() = 10 * escenario.ronda()/5
+	method lentitud() = 1 /* Máx. 4 */
+	method defensa() = 5 * escenario.ronda()/5
+	method drop() = (escenario.ronda()).randomUpTo((2 * escenario.ronda())+1).truncate(0)
+	method originalImage() = "enemy3.png"
+	method atkImage() = "enemy3_atk.png"
+	method deadImage() = "enemy3_dead.png"
+}
+
+object fantasma {
+	method vida() = 100
+	method ataque() = 15 * escenario.ronda()/5
+	method lentitud() = 2 /* Máx. 4 */
+	method defensa() = 10 * escenario.ronda()/5
+	method drop() = (escenario.ronda()).randomUpTo((4 * escenario.ronda())+1).truncate(0)
+	method originalImage() = "enemy4.png"
+	method atkImage() = "enemy4_atk.png"
+	method deadImage() = "enemy4_dead.png"
+}
+
 object demonio {
 	method vida() = 100
 	method ataque() = 20 * escenario.ronda()/5
@@ -363,15 +389,4 @@ object helado {
 	method originalImage() = "enemy2.png"
 	method atkImage() = "enemy2_atk.png"
 	method deadImage() = "enemy2_dead.png"
-}
-
-object esqueleto {
-	method vida() = 100
-	method ataque() = 10 * escenario.ronda()/5
-	method lentitud() = 1 /* Máx. 4 */
-	method defensa() = 5 * escenario.ronda()/5
-	method drop() = (escenario.ronda()).randomUpTo((2 * escenario.ronda())+1).truncate(0)
-	method originalImage() = "enemy3.png"
-	method atkImage() = "enemy3_atk.png"
-	method deadImage() = "enemy3_dead.png"
 }

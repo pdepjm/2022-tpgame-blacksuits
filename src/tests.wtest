@@ -1,6 +1,18 @@
+import personajes.*
+import juego.*
 
-test "testX" {
+describe "tests del juego" {
 
-	assert.that(true)
+    const enemigoEjemplo = new Enemigo(especie = esqueleto)
+
+    test "Cuando el heroe recibe danio, a la vida se le resta el daño recibido menos la defensa" {
+        hero.recibirDanio(10)
+        assert.that(hero.vida() == 100 - (10-hero.defensa()))
+    }
+
+    test "Cuando un enemigo recibe danio, a la vida se le resta el daño recibido menos la defensa" {
+        enemigoEjemplo.recibirDanio(10)
+        assert.that(enemigoEjemplo.vida() == 100 - (10-enemigoEjemplo.especie().defensa()))
+    }
 
 }
