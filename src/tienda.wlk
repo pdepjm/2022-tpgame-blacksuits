@@ -102,7 +102,7 @@ class Item {
 	const probCritico = 0
 	const lentitud = 0
 	const defensa = 0
-	const precio
+	const precio = 0
 	
 	method position() = game.at(5,2)
 	method image() = image
