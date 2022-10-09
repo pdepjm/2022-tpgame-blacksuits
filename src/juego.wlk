@@ -33,6 +33,7 @@ object juego {
 	
 	method dibujarStats() {
 		game.addVisual(heroBarraVida)
+		game.addVisual(heroVida)
 		game.addVisual(heroAtaque)
 		game.addVisual(heroAtaqueIcon)
 		game.addVisual(heroDefensa)
@@ -43,6 +44,7 @@ object juego {
 		game.addVisual(heroMonederoIcon)
 		
 		game.addVisual(enemigoBarraVida)
+		game.addVisual(enemigoVida)
 		game.addVisual(enemigoAtaque)
 		game.addVisual(enemigoAtaqueIcon)
 		game.addVisual(enemigoDefensa)

@@ -1,4 +1,6 @@
 import wollok.game.*
+import juego.*
+
 
 /* Escenario */
 object escenarioFondo {
@@ -35,9 +37,11 @@ object escenario {
             enemigo = new Enemigo(especie = demonio)
         } else if (ronda == 4) {
             enemigo = new Enemigo(especie = helado)
+        } else if (ronda == 5) {
+            enemigo = new Boss(especie = helado, item = buffVida)
         }
         
-        if(ronda > 4){
+        if(ronda > 5){
         	randomEnemigo = 1.randomUpTo(especies.size()+1).truncate(0)
 			if(randomEnemigo == 1){
 				enemigo = new Enemigo(especie = esqueleto)
@@ -67,6 +71,7 @@ object monedas {
 	method position() = game.at(5,2)
 	method image() = "monedas.png"
 }
+
 
 /* Héroe */
 object heroBarraVida {
@@ -101,6 +106,12 @@ object heroBarraVida {
 			image = "barra_vida0.png"
 		}
 	}
+}
+
+object heroVida {
+	method position() = game.at(0,9)
+	method text() = "                            " + hero.vida()
+	method textColor() = "FF0000"
 }
 
 object heroAtaque {
@@ -182,6 +193,36 @@ object hero {
 	method defensa() = defensa
 	method monedero() = monedero
 	
+	method vida(_vida) {
+		vida = 100.min(vida + _vida)
+		heroBarraVida.actualizarBarraVida()
+	}
+	
+	method ataque(_ataque) {
+		ataque += _ataque
+	}
+	
+	method lentitud(_lentitud) {
+		lentitud -= _lentitud
+	}
+	
+	method defensa(_defensa) {
+		defensa += _defensa
+	}
+	
+	method agarrarMonedas(cantidad) {
+		monedero += cantidad
+		game.say(heroChat, "Obtuve " + cantidad + " monedas!")
+	}
+	
+	method agarrarItem(item) {
+		self.vida(item.vida())
+		self.ataque(item.ataque())
+		self.lentitud(item.lentitud())
+		self.defensa(item.defensa())
+		game.say(heroChat, "Obtuve " + item.nombre() + "!")
+	}
+	
 	method atacar() {
 		if(puedeAtacar && escenario.enemigo().vida() > 0 && !muerto){
 			puedeAtacar = false
@@ -194,11 +235,6 @@ object hero {
 			game.schedule((lentitud * 1000)/2, {heroChat.position(game.at(3,3))})
 			game.schedule(lentitud * 1000, {puedeAtacar = true})
 		}
-	}
-	
-	method agarrarMonedas(cantidad) {
-		monedero += cantidad
-		game.say(heroChat, "Obtuve " + cantidad + " monedas!")
 	}
 	
 	method recibirDanio(danio) {
@@ -217,8 +253,10 @@ object hero {
 		game.removeTickEvent("ataque")
 		game.schedule(1000 + 1, {position = game.at(1,2)})
 		game.schedule(1000 + 1, {image = "hero_dead.png"})
+		game.schedule(5000, {game.stop()})
 	}
 }
+
 
 /* Enemigos */
 object enemigoBarraVida {
@@ -253,6 +291,12 @@ object enemigoBarraVida {
 			image = "barra_vida0.png"
 		}
 	}
+}
+
+object enemigoVida {
+	method position() = game.at(9,9)
+	method text() = "                      " + escenario.enemigo().vida()
+	method textColor() = "FF0000"
 }
 
 object enemigoAtaque {
@@ -296,7 +340,7 @@ class Enemigo {
 	var vida = especie.vida()
 	
 	var image = especie.originalImage()
-	const position = game.at(5,2)
+	const position = especie.posicion()
 	
 	method position() = position
 	method image() = image
@@ -346,8 +390,30 @@ class Enemigo {
 	}
 }
 
+class Boss inherits Enemigo {
+	
+	const item
+	
+	method soltarItem() {
+		game.addVisual(item)
+	}
+	
+	override method morir(){
+		game.removeTickEvent("ataque")
+		game.schedule((especie.lentitud() * 1000)/2 + 1, {image = especie.deadImage()})
+		game.schedule((especie.lentitud() * 1000)/2 + 1, {self.soltarItem()})
+		game.schedule(3000, {game.removeVisual(item)})
+		game.schedule(3000, {hero.agarrarItem(item)})
+		game.schedule(3000, {game.removeVisual(escenario.enemigo())})
+		game.schedule(4000, {escenario.siguienteRonda()})
+	}
+	
+}
+
+
 /* Especies de Enemigos */
 object esqueleto {
+	method posicion() = game.at(5,2)
 	method vida() = 100
 	method ataque() = 10 * escenario.ronda()/5
 	method lentitud() = 1 /* Máx. 4 */
@@ -359,6 +425,7 @@ object esqueleto {
 }
 
 object fantasma {
+	method posicion() = game.at(4,2)
 	method vida() = 100
 	method ataque() = 15 * escenario.ronda()/5
 	method lentitud() = 2 /* Máx. 4 */
@@ -370,6 +437,7 @@ object fantasma {
 }
 
 object demonio {
+	method posicion() = game.at(5,2)
 	method vida() = 100
 	method ataque() = 20 * escenario.ronda()/5
 	method lentitud() = 2 /* Máx. 4 */
@@ -381,6 +449,7 @@ object demonio {
 }
 
 object helado {
+	method posicion() = game.at(5,2)
 	method vida() = 100
 	method ataque() = 10 * escenario.ronda()/5
 	method lentitud() = 4 /* Máx. 4 */
@@ -389,4 +458,40 @@ object helado {
 	method originalImage() = "enemy2.png"
 	method atkImage() = "enemy2_atk.png"
 	method deadImage() = "enemy2_dead.png"
+}
+
+
+/* Items */
+class Item {
+	const image
+	const nombre = ""
+	const vida = 0
+	const ataque = 0
+	const lentitud = 0
+	const defensa = 0
+	
+	method position() = game.at(5,2)
+	method image() = image
+	
+	method nombre() = nombre
+	method vida() = vida
+	method ataque() = ataque
+	method lentitud() = lentitud
+	method defensa() = defensa
+}
+
+object buffVida inherits Item(image = "itemVida.png", nombre = "una poción de Vida") {
+	override method vida() = 10.randomUpTo(50+1).truncate(0)
+}
+
+object buffAtaque inherits Item(image = "itemAtaque.png", nombre = "un boost de Ataque") {
+	override method ataque() = 5 + escenario.ronda()/2
+}
+
+object buffVelocidad inherits Item(image = "itemVelocidad.png", nombre = "una mejora de Velocidad") {
+	override method lentitud() = escenario.ronda()/10
+}
+
+object buffDefensa inherits Item(image = "itemDefensa.png", nombre = "una mejora de Defensa") {
+	override method defensa() = 5 + escenario.ronda()/2
 }
