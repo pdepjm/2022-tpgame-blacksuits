@@ -1,4 +1,5 @@
 import personajes.*
+import tienda.*
 import wollok.game.*
 
 object juego {
@@ -16,6 +17,7 @@ object juego {
 		self.agregarPersonajes()
 		self.configurarTeclas()
 		escenario.enemigo().iniciarAtaques()
+		self.configurarTienda()
 	}
 
 	method agregarPersonajes() {
@@ -51,6 +53,7 @@ object juego {
 		game.addVisual(enemigoDefensaIcon)
 		game.addVisual(enemigoVelocidad)
 		game.addVisual(enemigoVelocidadIcon)
+		
 	}
 
 	method dibujarHero() {
@@ -64,5 +67,27 @@ object juego {
 	
 	method configurarTeclas() {
 		keyboard.q().onPressDo({hero.atacar()})
+		keyboard.b().onPressDo({selector.comprar()})
+		keyboard.x().onPressDo({hero.habilidad().accionar()})
+		keyboard.left().onPressDo({selector.moverIzquierda()})
+		keyboard.right().onPressDo({selector.moverDerecha()})
+	}
+	
+	method configurarTienda() {
+		tienda.randomizar()
+		tienda.dibujar()
+		game.addVisual(selector)
+		game.addVisual(limiteIzquierdo)
+		game.addVisual(limiteDerecho)
+		game.whenCollideDo(selector, {item =>
+			selector.itemSeleccionado(item)
+		})
+		game.whenCollideDo(limiteIzquierdo, {sel =>
+			sel.moverDerecha()
+		})
+		
+		game.whenCollideDo(limiteDerecho, {sel =>
+			sel.moverIzquierda()
+		})
 	}
 }

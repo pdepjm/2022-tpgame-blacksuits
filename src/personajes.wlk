@@ -1,5 +1,6 @@
 import wollok.game.*
 import juego.*
+import tienda.*
 
 
 /* Escenario */
@@ -180,6 +181,7 @@ object hero {
 	var monedero = 0
 	var puedeAtacar = true
 	var muerto = false
+	var habilidad = habilidadNula
 	
 	var image = "hero.png"
 	var position = game.at(3,2)
@@ -192,6 +194,15 @@ object hero {
 	method lentitud() = lentitud
 	method defensa() = defensa
 	method monedero() = monedero
+	method habilidad() = habilidad
+	
+	method habilidad(_habilidad) {
+		habilidad = _habilidad
+	}
+	
+	method usarHabilidad() {
+		habilidad.accionar()
+	}
 	
 	method vida(_vida) {
 		vida = 100.min(vida + _vida)
@@ -215,13 +226,10 @@ object hero {
 		game.say(heroChat, "Obtuve " + cantidad + " monedas!")
 	}
 	
-	method agarrarItem(item) {
-		self.vida(item.vida())
-		self.ataque(item.ataque())
-		self.lentitud(item.lentitud())
-		self.defensa(item.defensa())
-		game.say(heroChat, "Obtuve " + item.nombre() + "!")
+	method pagar(precio) {
+		monedero -= precio
 	}
+	
 	
 	method atacar() {
 		if(puedeAtacar && escenario.enemigo().vida() > 0 && !muerto){
@@ -403,7 +411,7 @@ class Boss inherits Enemigo {
 		game.schedule((especie.lentitud() * 1000)/2 + 1, {image = especie.deadImage()})
 		game.schedule((especie.lentitud() * 1000)/2 + 1, {self.soltarItem()})
 		game.schedule(3000, {game.removeVisual(item)})
-		game.schedule(3000, {hero.agarrarItem(item)})
+		game.schedule(3000, {item.serAgarrado()})
 		game.schedule(3000, {game.removeVisual(escenario.enemigo())})
 		game.schedule(4000, {escenario.siguienteRonda()})
 	}
@@ -458,40 +466,4 @@ object helado {
 	method originalImage() = "enemy2.png"
 	method atkImage() = "enemy2_atk.png"
 	method deadImage() = "enemy2_dead.png"
-}
-
-
-/* Items */
-class Item {
-	const image
-	const nombre = ""
-	const vida = 0
-	const ataque = 0
-	const lentitud = 0
-	const defensa = 0
-	
-	method position() = game.at(5,2)
-	method image() = image
-	
-	method nombre() = nombre
-	method vida() = vida
-	method ataque() = ataque
-	method lentitud() = lentitud
-	method defensa() = defensa
-}
-
-object buffVida inherits Item(image = "itemVida.png", nombre = "una poción de Vida") {
-	override method vida() = 10.randomUpTo(50+1).truncate(0)
-}
-
-object buffAtaque inherits Item(image = "itemAtaque.png", nombre = "un boost de Ataque") {
-	override method ataque() = 5 + escenario.ronda()/2
-}
-
-object buffVelocidad inherits Item(image = "itemVelocidad.png", nombre = "una mejora de Velocidad") {
-	override method lentitud() = escenario.ronda()/10
-}
-
-object buffDefensa inherits Item(image = "itemDefensa.png", nombre = "una mejora de Defensa") {
-	override method defensa() = 5 + escenario.ronda()/2
 }
