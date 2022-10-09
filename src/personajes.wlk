@@ -445,7 +445,7 @@ object esqueleto {
 	method posicion() = game.at(5,2)
 	method vida() = 100
 	method ataque() = (10 * escenario.ronda()/5).truncate(0)
-	method lentitud() = 1 /* Máx. 4 */
+	method lentitud() = 1.5 /* Máx. 4 */
 	method defensa() = 2 * (escenario.ronda() - 1)
 	method drop() = (escenario.ronda()).randomUpTo((2 * escenario.ronda())+1).truncate(0)
 	method originalImage() = "enemy3.png"
