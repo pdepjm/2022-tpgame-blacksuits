@@ -138,7 +138,7 @@ class BuffCritico inherits Item(image = "itemCritico.png", nombre = "un aumento 
 }
 
 class BuffVelocidad inherits Item(image = "itemVelocidad.png", nombre = "una mejora de Velocidad", precio = 10 * escenario.ronda()) {
-	override method lentitud() = 0.1
+	override method lentitud() = 0.25
 }
 
 class BuffDefensa inherits Item(image = "itemDefensa.png", nombre = "una mejora de Defensa", precio = 5 * escenario.ronda()) {
