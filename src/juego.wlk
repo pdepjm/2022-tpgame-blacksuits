@@ -3,7 +3,6 @@ import tienda.*
 import wollok.game.*
 
 object juego {
-	
 	method iniciar() {
 		self.hacerConfiguracionInicial()
 		game.start()
@@ -38,6 +37,7 @@ object juego {
 		game.addVisual(heroVida)
 		game.addVisual(heroAtaque)
 		game.addVisual(heroAtaqueIcon)
+		game.addVisual(heroCritico)
 		game.addVisual(heroDefensa)
 		game.addVisual(heroDefensaIcon)
 		game.addVisual(heroVelocidad)
@@ -53,7 +53,6 @@ object juego {
 		game.addVisual(enemigoDefensaIcon)
 		game.addVisual(enemigoVelocidad)
 		game.addVisual(enemigoVelocidadIcon)
-		
 	}
 
 	method dibujarHero() {
@@ -67,8 +66,9 @@ object juego {
 	
 	method configurarTeclas() {
 		keyboard.q().onPressDo({hero.atacar()})
-		keyboard.b().onPressDo({selector.comprar()})
-		keyboard.x().onPressDo({hero.habilidad().accionar()})
+		keyboard.space().onPressDo({hero.usarHabilidad()})
+		
+		keyboard.e().onPressDo({selector.comprar()})
 		keyboard.left().onPressDo({selector.moverIzquierda()})
 		keyboard.right().onPressDo({selector.moverDerecha()})
 	}
@@ -79,15 +79,8 @@ object juego {
 		game.addVisual(selector)
 		game.addVisual(limiteIzquierdo)
 		game.addVisual(limiteDerecho)
-		game.whenCollideDo(selector, {item =>
-			selector.itemSeleccionado(item)
-		})
-		game.whenCollideDo(limiteIzquierdo, {sel =>
-			sel.moverDerecha()
-		})
-		
-		game.whenCollideDo(limiteDerecho, {sel =>
-			sel.moverIzquierda()
-		})
+		game.whenCollideDo(selector, {item => selector.itemSeleccionado(item)})
+		game.whenCollideDo(limiteIzquierdo, {sel => sel.moverDerecha()})
+		game.whenCollideDo(limiteDerecho, {sel => sel.moverIzquierda()})
 	}
 }
