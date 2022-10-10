@@ -20,36 +20,36 @@ object escenarioRondaLabel {
 	method position() = game.at(4,9)
 	method image() = "label2.png"
 }
-
 object escenario {
-	const especies = [demonio, helado, esqueleto, fantasma, mago]
+	const especies = [esqueleto, fantasma, mago, helado, demonio]
 	var ronda = 1
 	var enemigo = new Enemigo(especie = esqueleto)
+	var ronda2 = 1
 	
 	method ronda() = ronda
+	method ronda2(_ronda2) {
+		ronda2 = _ronda2
+	}
+
 	method enemigo() = enemigo
+	
+	method enemigoDeLaRonda(indice) = especies.get(indice-1) // considerando que indice > 1
+	
 	
 	method siguienteRonda() {
 		ronda += 1
+		ronda2 += 1
 
-		if(ronda == 2) {
-            enemigo = new Enemigo(especie = fantasma)
-        } else if (ronda == 3) {
-            enemigo = new Enemigo(especie = mago)
-        } else if (ronda == 4) {
-            enemigo = new Enemigo(especie = helado)
-        } else if(ronda == 5) {
-        	 enemigo = new Boss(especie = demonio, item = tienda.itemsPosibles().anyOne())
-        } else if(ronda != 5 && ronda/5 - (ronda/5).truncate(0) == 0) {
-        	enemigo = new Boss(especie = especies.anyOne(), item = tienda.itemsPosibles().anyOne())
-        } else {
-        	enemigo = new Enemigo(especie = especies.anyOne())
-        }
-		
+		if(ronda2 <= 5) {
+			enemigo = new Enemigo(especie = self.elementoDeLaLista(ronda2))
+       		} else if (ronda2 > 5){
+        	self.ronda2(1)
+        	enemigo = new Enemigo(especie = self.elementoDeLaLista(ronda2))
+        	}
 		game.addVisual(enemigo)
 		enemigoBarraVida.actualizarBarraVida()
 		enemigo.iniciarAtaques()
-	}
+		}
 }
 
 
