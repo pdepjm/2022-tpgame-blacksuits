@@ -39,26 +39,38 @@ object selector {
 }
 
 object tienda {
-	const itemsPosibles = []
+	var itemsPosibles = []
 	
 	method itemsPosibles() = itemsPosibles
 	
 	method origenTienda() = 3
 	
 	method rellenarItemsPosibles() {
+		const nuevosItemsPosibles = []
 		const probVida = 25
 		const probAtaque = 20
 		const probDefensa = 20
-		const probVelocidad = 15
-		const probCritico = 10
-		const probEsquive = 10
+		var probVelocidad = 15
+		var probCritico = 10
+		var probEsquive = 10
+		
+		if(hero.lentitud() == 0){
+			probVelocidad = 0
+		}
+		if(hero.probCritico() == 100){
+			probCritico = 0
+		}
+		if(hero.probEsquive() == 100){
+			probEsquive = 0
+		}
  		
- 		funciones.addNVeces(itemsPosibles, probVida, new BuffVida())
- 		funciones.addNVeces(itemsPosibles, probAtaque, new BuffAtaque())
- 		funciones.addNVeces(itemsPosibles, probDefensa, new BuffDefensa())
- 		funciones.addNVeces(itemsPosibles, probVelocidad, new BuffVelocidad())
- 		funciones.addNVeces(itemsPosibles, probCritico, new BuffCritico())
- 		funciones.addNVeces(itemsPosibles, probEsquive, new BuffEsquive())
+ 		funciones.addNVeces(nuevosItemsPosibles, probVida, new BuffVida())
+ 		funciones.addNVeces(nuevosItemsPosibles, probAtaque, new BuffAtaque())
+ 		funciones.addNVeces(nuevosItemsPosibles, probDefensa, new BuffDefensa())
+ 		funciones.addNVeces(nuevosItemsPosibles, probVelocidad, new BuffVelocidad())
+ 		funciones.addNVeces(nuevosItemsPosibles, probCritico, new BuffCritico())
+ 		funciones.addNVeces(nuevosItemsPosibles, probEsquive, new BuffEsquive())
+ 		itemsPosibles = nuevosItemsPosibles
 	}
 	
 	method randomizarSeleccionado() {

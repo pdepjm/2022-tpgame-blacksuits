@@ -22,7 +22,7 @@ object escenarioRondaLabel {
 }
 
 object escenario {
-	const especies = [demonio, helado, esqueleto, fantasma]
+	const especies = [demonio, helado, esqueleto, fantasma, mago]
 	var ronda = 1
 	var enemigo = new Enemigo(especie = esqueleto)
 	
@@ -35,10 +35,12 @@ object escenario {
 		if(ronda == 2) {
             enemigo = new Enemigo(especie = fantasma)
         } else if (ronda == 3) {
-            enemigo = new Enemigo(especie = demonio)
+            enemigo = new Enemigo(especie = mago)
         } else if (ronda == 4) {
             enemigo = new Enemigo(especie = helado)
-        } else if(ronda/5 - (ronda/5).truncate(0) == 0){
+        } else if(ronda == 5) {
+        	 enemigo = new Boss(especie = demonio, item = tienda.itemsPosibles().anyOne())
+        } else if(ronda != 5 && ronda/5 - (ronda/5).truncate(0) == 0) {
         	enemigo = new Boss(especie = especies.anyOne(), item = tienda.itemsPosibles().anyOne())
         } else {
         	enemigo = new Enemigo(especie = especies.anyOne())
@@ -186,6 +188,8 @@ object hero {
 	var idleImage = "hero.png"
 	var atkImage = "hero_atk.png"
 	var critImage = "hero_atk_crit.png"
+	var disparoImage = "disparo.png"
+	var mamporroImage = "mamporro.png"
 	
 	var image = idleImage
 	var position = game.at(3,2)
@@ -196,10 +200,14 @@ object hero {
 	var lentitud = 3 /* Máx. 4 */
 	var defensa = 0
 	var probEsquive = 5
-	var monedero = 10000
+	var monedero = 0
 	
 	var puedeAtacar = true
 	var muerto = false
+	
+	method idleImage() = idleImage
+	method disparoImage() = disparoImage
+	method mamporroImage() = mamporroImage
 	
 	method idleImage(_idleImage){
 		idleImage = _idleImage
@@ -212,6 +220,15 @@ object hero {
 	method critImage(_critImage){
 		critImage = _critImage
 	}
+	
+	method disparoImage(_disparoImage){
+		disparoImage = _disparoImage
+	}
+	
+	method mamporroImage(_mamporroImage){
+		mamporroImage = _mamporroImage
+	}
+	
 
 	method position() = position
 	method image() = image
@@ -224,6 +241,14 @@ object hero {
 	method probEsquive() = probEsquive
 	method monedero() = monedero
 	method muerto() = muerto
+	
+	method position(_position){
+		position = _position
+	}
+	
+	method image(_image){
+		image = _image
+	}
 	
 	method vida(_vida) {
 		vida = 100.min(vida + _vida)
@@ -492,6 +517,18 @@ object fantasma {
 	method deadImage() = "enemy4_dead.png"
 }
 
+object helado {
+	method posicion() = game.at(5,2)
+	method vida() = 100
+	method ataque() = 5 + ((escenario.ronda()/5) ** 2).truncate(0)
+	method lentitud() = 4 /* Máx. 4 */
+	method defensa() = 10 + ((escenario.ronda()/5) ** 4).truncate(0)
+	method drop() = (escenario.ronda()).randomUpTo(4 * (escenario.ronda()+1)).truncate(0)
+	method originalImage() = "enemy2.png"
+	method atkImage() = "enemy2_atk.png"
+	method deadImage() = "enemy2_dead.png"
+}
+
 object demonio {
 	method posicion() = game.at(5,2)
 	method vida() = 100
@@ -504,14 +541,14 @@ object demonio {
 	method deadImage() = "enemy1_dead.png"
 }
 
-object helado {
-	method posicion() = game.at(5,2)
+object mago {
+	method posicion() = game.at(4,2)
 	method vida() = 100
-	method ataque() = 5 + ((escenario.ronda()/5) ** 2).truncate(0)
-	method lentitud() = 4 /* Máx. 4 */
-	method defensa() = 10 + ((escenario.ronda()/5) ** 4).truncate(0)
-	method drop() = (escenario.ronda()).randomUpTo(4 * (escenario.ronda()+1)).truncate(0)
-	method originalImage() = "enemy2.png"
-	method atkImage() = "enemy2_atk.png"
-	method deadImage() = "enemy2_dead.png"
+	method ataque() = 10 + ((escenario.ronda()/5) ** 4).truncate(0)
+	method lentitud() = 2.5 /* Máx. 4 */
+	method defensa() = 10 + ((escenario.ronda()/5) ** 2.5).truncate(0)
+	method drop() = (escenario.ronda()).randomUpTo(5 * (escenario.ronda()+1)).truncate(0)
+	method originalImage() = "enemy5.png"
+	method atkImage() = "enemy5_atk.png"
+	method deadImage() = "enemy5_dead.png"
 }
