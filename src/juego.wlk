@@ -1,6 +1,8 @@
+import wollok.game.*
+import funciones.*
 import personajes.*
 import tienda.*
-import wollok.game.*
+import habilidades.*
 
 object juego {
 	method iniciar() {
@@ -17,6 +19,7 @@ object juego {
 		self.configurarTeclas()
 		escenario.enemigo().iniciarAtaques()
 		self.configurarTienda()
+		self.configurarTiendaH()
 	}
 
 	method agregarPersonajes() {
@@ -40,6 +43,7 @@ object juego {
 		game.addVisual(heroCritico)
 		game.addVisual(heroDefensa)
 		game.addVisual(heroDefensaIcon)
+		game.addVisual(heroEsquive)
 		game.addVisual(heroVelocidad)
 		game.addVisual(heroVelocidadIcon)
 		game.addVisual(heroMonedero)
@@ -66,11 +70,14 @@ object juego {
 	
 	method configurarTeclas() {
 		keyboard.q().onPressDo({hero.atacar()})
-		keyboard.space().onPressDo({hero.usarHabilidad()})
 		
 		keyboard.e().onPressDo({selector.comprar()})
 		keyboard.left().onPressDo({selector.moverIzquierda()})
 		keyboard.right().onPressDo({selector.moverDerecha()})
+		
+		keyboard.space().onPressDo({selectorH.comprar()})
+		keyboard.up().onPressDo({selectorH.moverArriba()})
+		keyboard.down().onPressDo({selectorH.moverAbajo()})
 	}
 	
 	method configurarTienda() {
@@ -82,5 +89,15 @@ object juego {
 		game.whenCollideDo(selector, {item => selector.itemSeleccionado(item)})
 		game.whenCollideDo(limiteIzquierdo, {sel => sel.moverDerecha()})
 		game.whenCollideDo(limiteDerecho, {sel => sel.moverIzquierda()})
+	}
+	
+	method configurarTiendaH() {
+		tiendaH.dibujar()
+		game.addVisual(selectorH)
+		game.addVisual(limiteInferior)
+		game.addVisual(limiteSuperior)
+		game.whenCollideDo(selectorH, {habilidad => selectorH.habilidadSeleccionada(habilidad)})
+		game.whenCollideDo(limiteInferior, {sel => sel.moverArriba()})
+		game.whenCollideDo(limiteSuperior, {sel => sel.moverAbajo()})
 	}
 }

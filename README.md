@@ -3,9 +3,9 @@
 ## Equipo de desarrollo
 
 - Franco Modesto
-- Matías Oliva
+- Matias Oliva
 - Juan Pablo Castiglione
-- María Guadalupe Fernández
+- Maria Guadalupe Fernandez
 - Abril Caruso
 
 ## Capturas

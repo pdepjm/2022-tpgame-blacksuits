@@ -1,6 +1,8 @@
 import wollok.game.*
+import funciones.*
 import juego.*
 import tienda.*
+import habilidades.*
 
 /* Escenario */
 object escenarioFondo {
@@ -20,8 +22,7 @@ object escenarioRondaLabel {
 }
 
 object escenario {
-	const especies = #{demonio, helado, esqueleto, fantasma}
-	var randomEnemigo = 0
+	const especies = [demonio, helado, esqueleto, fantasma]
 	var ronda = 1
 	var enemigo = new Enemigo(especie = esqueleto)
 	
@@ -37,21 +38,10 @@ object escenario {
             enemigo = new Enemigo(especie = demonio)
         } else if (ronda == 4) {
             enemigo = new Enemigo(especie = helado)
-        } else if (ronda == 5) {
-            enemigo = new Boss(especie = esqueleto, item = new BuffVida())
-        }
-        
-        if(ronda > 5){
-        	randomEnemigo = 1.randomUpTo(especies.size()+1).truncate(0)
-			if(randomEnemigo == 1){
-				enemigo = new Enemigo(especie = esqueleto)
-			} else if(randomEnemigo == 2){
-				enemigo = new Enemigo(especie = fantasma)
-			} else if(randomEnemigo == 3){
-				enemigo = new Enemigo(especie = demonio)
-			} else if(randomEnemigo == 4){
-				enemigo = new Enemigo(especie = helado)
-			}
+        } else if(ronda/5 - (ronda/5).truncate(0) == 0){
+        	enemigo = new Boss(especie = especies.anyOne(), item = tienda.itemsPosibles().anyOne())
+        } else {
+        	enemigo = new Enemigo(especie = especies.anyOne())
         }
 		
 		game.addVisual(enemigo)
@@ -146,6 +136,13 @@ object heroDefensaIcon {
 	method image() = "escudo.png"
 }
 
+object heroEsquive {
+	method position() = game.at(4,7)
+	method text() = "                % Esquive: " + hero.probEsquive()
+	method textColor() = "3CDFFF"
+	method image() = "label.png"
+}
+
 object heroVelocidad {
 	method position() = game.at(2,6)
 	method text() = "                Velocidad: " + (5 - hero.lentitud())
@@ -170,6 +167,11 @@ object heroMonederoIcon {
 	method image() = "monedero.png"
 }
 
+object heroEscudoEsquive {
+	method position() = hero.position()
+	method image() = "esquive.png"
+}
+
 object heroChat {
 	var position =  game.at(3,3)
 	
@@ -181,19 +183,35 @@ object heroChat {
 }
 
 object hero {
+	var idleImage = "hero.png"
+	var atkImage = "hero_atk.png"
+	var critImage = "hero_atk_crit.png"
+	
+	var image = idleImage
+	var position = game.at(3,2)
+	
 	var vida = 100
 	var ataque = 50
-	var probCritico = 1
+	var probCritico = 5
 	var lentitud = 3 /* Máx. 4 */
 	var defensa = 0
-	var monedero = 0
-	var habilidad = habilidadNula
+	var probEsquive = 5
+	var monedero = 10000
 	
 	var puedeAtacar = true
 	var muerto = false
 	
-	var image = "hero.png"
-	var position = game.at(3,2)
+	method idleImage(_idleImage){
+		idleImage = _idleImage
+	}
+	
+	method atkImage(_atkImage){
+		atkImage = _atkImage
+	}
+	
+	method critImage(_critImage){
+		critImage = _critImage
+	}
 
 	method position() = position
 	method image() = image
@@ -203,8 +221,8 @@ object hero {
 	method probCritico() = probCritico
 	method lentitud() = lentitud
 	method defensa() = defensa
+	method probEsquive() = probEsquive
 	method monedero() = monedero
-	method habilidad() = habilidad
 	method muerto() = muerto
 	
 	method vida(_vida) {
@@ -217,7 +235,7 @@ object hero {
 	}
 	
 	method probCritico(_probCritico) {
-		probCritico += _probCritico
+		probCritico = 100.min(probCritico + _probCritico)
 	}
 	
 	method lentitud(_lentitud) {
@@ -228,8 +246,8 @@ object hero {
 		defensa += _defensa
 	}
 	
-	method habilidad(_habilidad) {
-		habilidad = _habilidad
+	method probEsquive(_probEsquive) {
+		probEsquive = 100.min(probEsquive + _probEsquive)
 	}
 	
 	method puedeAtacar(_puedeAtacar) {
@@ -251,35 +269,41 @@ object hero {
 			const randCritico = 1.randomUpTo(100+1).truncate(0)
 			if(randCritico <= probCritico){
 				escenario.enemigo().recibirDanio(ataque * 2)
-				image = "hero_atk_crit.png"
+				image = critImage
 			} else {
 				escenario.enemigo().recibirDanio(ataque)
-				image = "hero_atk.png"
+				image = atkImage
 			}
 			position = game.at(4,2)
 			heroChat.position(game.at(4,3))
-			game.schedule((lentitud * 1000)/2, {image = "hero.png"})
+			game.schedule((lentitud * 1000)/2, {image = idleImage})
 			game.schedule((lentitud * 1000)/2, {position = game.at(3,2)})
 			game.schedule((lentitud * 1000)/2, {heroChat.position(game.at(3,3))})
 			game.schedule(lentitud * 1000, {puedeAtacar = true})
 		}
 	}
 	
-	method usarHabilidad() {
+	method usarHabilidad(habilidad) {
 		if(puedeAtacar && escenario.enemigo().vida() > 0 && !muerto){
 			habilidad.accionar()
 		}
 	}
 	
 	method recibirDanio(danio) {
-		if((danio - defensa) > 0){
-			vida -= (danio - defensa)
-			heroBarraVida.actualizarBarraVida()
-			if (vida <= 0) {
-				vida = 0
-				self.morir()
+		const randEsquive = 1.randomUpTo(100+1).truncate(0)
+			if(randEsquive <= probEsquive){
+				game.addVisual(heroEscudoEsquive)
+				game.schedule(1000, {game.removeVisual(heroEscudoEsquive)})
+			} else {
+				if((danio - defensa) > 0){
+					vida -= (danio - defensa)
+					heroBarraVida.actualizarBarraVida()
+					if (vida <= 0) {
+					vida = 0
+					self.morir()
+					}
+				}
 			}
-		}
 	}
 	
 	method morir(){
@@ -432,8 +456,11 @@ class Boss inherits Enemigo {
 		game.removeTickEvent("ataque")
 		game.schedule((especie.lentitud() * 1000)/2 + 1, {image = especie.deadImage()})
 		game.schedule((especie.lentitud() * 1000)/2 + 1, {game.addVisual(item)})
+		game.schedule((especie.lentitud() * 1000)/2 + 1, {self.soltarMonedas()})
 		game.schedule(3000, {game.removeVisual(item)})
+		game.schedule(3000, {game.removeVisual(monedas)})
 		game.schedule(3000, {item.serAgarrado()})
+		game.schedule(3000, {hero.agarrarMonedas(especie.drop())})
 		game.schedule(3000, {game.removeVisual(escenario.enemigo())})
 		game.schedule(4000, {escenario.siguienteRonda()})
 	}
@@ -444,10 +471,10 @@ class Boss inherits Enemigo {
 object esqueleto {
 	method posicion() = game.at(5,2)
 	method vida() = 100
-	method ataque() = (10 * escenario.ronda()/5).truncate(0)
+	method ataque() = 5 + ((escenario.ronda()/5) ** 2).truncate(0)
 	method lentitud() = 1.5 /* Máx. 4 */
-	method defensa() = 2 * (escenario.ronda() - 1)
-	method drop() = (escenario.ronda()).randomUpTo((2 * escenario.ronda())+1).truncate(0)
+	method defensa() = 5 + ((escenario.ronda()/5) ** 1.5).truncate(0)
+	method drop() = (escenario.ronda()).randomUpTo(2 * (escenario.ronda()+1)).truncate(0)
 	method originalImage() = "enemy3.png"
 	method atkImage() = "enemy3_atk.png"
 	method deadImage() = "enemy3_dead.png"
@@ -456,10 +483,10 @@ object esqueleto {
 object fantasma {
 	method posicion() = game.at(4,2)
 	method vida() = 100
-	method ataque() = (15 * escenario.ronda()/5).truncate(0)
+	method ataque() = 5 + ((escenario.ronda()/5) ** 3).truncate(0)
 	method lentitud() = 3 /* Máx. 4 */
-	method defensa() = (10 * escenario.ronda()/5).truncate(0)
-	method drop() = (escenario.ronda()).randomUpTo((4 * escenario.ronda())+1).truncate(0)
+	method defensa() = 5 + ((escenario.ronda()/5) ** 2.5).truncate(0)
+	method drop() = (escenario.ronda()).randomUpTo(3 * (escenario.ronda()+1)).truncate(0)
 	method originalImage() = "enemy4.png"
 	method atkImage() = "enemy4_atk.png"
 	method deadImage() = "enemy4_dead.png"
@@ -468,10 +495,10 @@ object fantasma {
 object demonio {
 	method posicion() = game.at(5,2)
 	method vida() = 100
-	method ataque() = (20 * escenario.ronda()/5).truncate(0)
+	method ataque() = 10 + ((escenario.ronda()/5) ** 4).truncate(0)
 	method lentitud() = 2 /* Máx. 4 */
-	method defensa() = (10 * escenario.ronda()/5).truncate(0)
-	method drop() = (escenario.ronda()).randomUpTo((3 * escenario.ronda())+1).truncate(0)
+	method defensa() = 5 + ((escenario.ronda()/5) ** 2).truncate(0)
+	method drop() = (escenario.ronda()).randomUpTo(4 * (escenario.ronda()+1)).truncate(0)
 	method originalImage() = "enemy1.png"
 	method atkImage() = "enemy1_atk.png"
 	method deadImage() = "enemy1_dead.png"
@@ -480,10 +507,10 @@ object demonio {
 object helado {
 	method posicion() = game.at(5,2)
 	method vida() = 100
-	method ataque() = (10 * escenario.ronda()/5).truncate(0)
+	method ataque() = 5 + ((escenario.ronda()/5) ** 2).truncate(0)
 	method lentitud() = 4 /* Máx. 4 */
-	method defensa() = (20 * escenario.ronda()/5).truncate(0)
-	method drop() = (escenario.ronda()).randomUpTo((4 * escenario.ronda())+1).truncate(0)
+	method defensa() = 10 + ((escenario.ronda()/5) ** 4).truncate(0)
+	method drop() = (escenario.ronda()).randomUpTo(4 * (escenario.ronda()+1)).truncate(0)
 	method originalImage() = "enemy2.png"
 	method atkImage() = "enemy2_atk.png"
 	method deadImage() = "enemy2_dead.png"

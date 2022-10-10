@@ -1,11 +1,12 @@
 import wollok.game.*
+import funciones.*
 import juego.*
 import personajes.*
 
 /* Tienda */
 object selector {
 	var itemTiendaSeleccionado
-	var position = game.at(tienda.origenTienda(),0)
+	var position = game.at(tienda.origenTienda(), 0)
 	const image = "selector.png"
 	
 	method position() = position
@@ -38,17 +39,35 @@ object selector {
 }
 
 object tienda {
-	var itemsPosibles = [new BuffVida(), new BuffAtaque(), new BuffCritico(), new BuffVelocidad(), new BuffDefensa()]
+	const itemsPosibles = []
+	
+	method itemsPosibles() = itemsPosibles
 	
 	method origenTienda() = 3
 	
+	method rellenarItemsPosibles() {
+		const probVida = 25
+		const probAtaque = 20
+		const probDefensa = 20
+		const probVelocidad = 15
+		const probCritico = 10
+		const probEsquive = 10
+ 		
+ 		funciones.addNVeces(itemsPosibles, probVida, new BuffVida())
+ 		funciones.addNVeces(itemsPosibles, probAtaque, new BuffAtaque())
+ 		funciones.addNVeces(itemsPosibles, probDefensa, new BuffDefensa())
+ 		funciones.addNVeces(itemsPosibles, probVelocidad, new BuffVelocidad())
+ 		funciones.addNVeces(itemsPosibles, probCritico, new BuffCritico())
+ 		funciones.addNVeces(itemsPosibles, probEsquive, new BuffEsquive())
+	}
+	
 	method randomizarSeleccionado() {
-		itemsPosibles = [new BuffVida(), new BuffAtaque(), new BuffCritico(), new BuffVelocidad(), new BuffDefensa()]
+		self.rellenarItemsPosibles()
 		selector.itemSeleccionado().item(itemsPosibles.anyOne())
 	}
 	
 	method randomizar() {
-		itemsPosibles = [new BuffVida(), new BuffAtaque(), new BuffCritico(), new BuffVelocidad(), new BuffDefensa()]
+		self.rellenarItemsPosibles()
 		itemTienda1.item(itemsPosibles.anyOne())
 		itemTienda2.item(itemsPosibles.anyOne())
 		itemTienda3.item(itemsPosibles.anyOne())
@@ -64,19 +83,19 @@ object tienda {
 }
 
 class ItemTienda {
-	var item = new BuffVida()
 	var posX
+	var item = itemNulo
 	
 	method position() = game.at(posX, 0)
 	method image() = item.image()
 	method text() = "" + item.precio()
 	method textColor() = "FFCE30"
 	
+	method item() = item
+	
 	method item(_item) {
 		item = _item
 	}
-	
-	method item() = item
 }
 
 const itemTienda1 = new ItemTienda(posX = tienda.origenTienda())
@@ -84,12 +103,16 @@ const itemTienda2 = new ItemTienda(posX = tienda.origenTienda() + 1)
 const itemTienda3 = new ItemTienda(posX = tienda.origenTienda() + 2)
 const itemTienda4 = new ItemTienda(posX = tienda.origenTienda() + 3)
 
-object limiteIzquierdo {
-	method position() = game.at(tienda.origenTienda() - 1,0)
+object limiteIzquierdo{
+	method position() = game.at(tienda.origenTienda() - 1, 0)
+	method item() = itemNulo
+	method item(item) {}
 }
-
-object limiteDerecho {
-	method position() = game.at(tienda.origenTienda() + 4,0)
+	
+object limiteDerecho{
+	method position() = game.at(tienda.origenTienda() + 4, 0)
+	method item() = itemNulo
+	method item(item) {}
 }
 
 
@@ -102,6 +125,7 @@ class Item {
 	const probCritico = 0
 	const lentitud = 0
 	const defensa = 0
+	const probEsquive = 0
 	const precio = 0
 	
 	method position() = game.at(5,2)
@@ -113,6 +137,7 @@ class Item {
 	method probCritico() = probCritico
 	method lentitud() = lentitud
 	method defensa() = defensa
+	method probEsquive() = probEsquive
 	method precio() = precio
 	
 	method serAgarrado() {
@@ -121,9 +146,12 @@ class Item {
 		hero.probCritico(self.probCritico())
 		hero.lentitud(self.lentitud())
 		hero.defensa(self.defensa())
+		hero.probEsquive(self.probEsquive())
 		game.say(heroChat, "Obtuve " + self.nombre() + "!")
 	}
 }
+
+object itemNulo inherits Item(image = "") {}
 
 class BuffVida inherits Item(image = "itemVida.png", nombre = "una poción de Vida", precio = 10.randomUpTo(50+1).truncate(0)) {
 	override method vida() = precio
@@ -145,50 +173,6 @@ class BuffDefensa inherits Item(image = "itemDefensa.png", nombre = "una mejora 
 	override method defensa() = 5 + escenario.ronda()
 }
 
-
-/* Habilidades */
-class Habilidad {
-	var puedeSerUsada = true
-	var cooldown = 0
-	
-	method position() = game.at(9,0)
-	
-	method serAgarrado() {
-		game.removeVisual(hero.habilidad())
-		hero.habilidad(self)
-		game.addVisual(self)
-	}
-	
-	method cooldown() = cooldown
-	
-	method cooldown(tiempo) {
-		puedeSerUsada = false
-		hero.puedeAtacar(false)
-		game.schedule((hero.lentitud() * 1000)/2, {hero.puedeAtacar(true)})
-		game.schedule(tiempo * 1000, {puedeSerUsada = true game.removeTickEvent("bajarCooldown") cooldown = 0})
-		cooldown = tiempo * 1000
-		game.onTick(1000, "bajarCooldown", {cooldown = cooldown - 1000})
-	}
-	
-	method accionar()
+class BuffEsquive inherits Item(image = "itemEsquive.png", nombre = "un aumento de Esquive", precio = 10 * escenario.ronda()) {
+	override method probEsquive() = 5
 }
-
-
-object habilidadNula inherits Habilidad {
-	override method accionar() {
-	}
-}
-
-object ejemploHabilidad inherits Habilidad {
-	method image() = "item_habilidad1.png"
-	method text() = "" + self.cooldown()/1000
-	method textColor() = "FFCE30"
-	
-	override method accionar() {
-		if (puedeSerUsada) {
-			escenario.enemigo().recibirDanio(90)
-			self.cooldown(10)
-		}
-	}
-}
-
