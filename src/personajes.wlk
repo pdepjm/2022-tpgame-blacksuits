@@ -25,6 +25,7 @@ object escenario {
 	var ronda = 1
 	var enemigo = new Enemigo(especie = esqueleto)
 	var ronda2 = 1
+	const cantEnemigos = especies.size()
 	
 	method ronda() = ronda
 	method ronda2(_ronda2) {
@@ -40,11 +41,11 @@ object escenario {
 		ronda += 1
 		ronda2 += 1
 
-		if(ronda2 <= 5) {
-			enemigo = new Enemigo(especie = self.elementoDeLaLista(ronda2))
-       		} else if (ronda2 > 5){
+		if(ronda2 <= cantEnemigos) {
+			enemigo = new Enemigo(especie = self.enemigoDeLaRonda(ronda2))
+       		} else if (ronda2 > cantEnemigos){
         	self.ronda2(1)
-        	enemigo = new Enemigo(especie = self.elementoDeLaLista(ronda2))
+        	enemigo = new Enemigo(especie = self.enemigoDeLaRonda(ronda2))
         	}
 		game.addVisual(enemigo)
 		enemigoBarraVida.actualizarBarraVida()
