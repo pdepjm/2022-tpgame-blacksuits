@@ -8,6 +8,9 @@
 - Maria Guadalupe Fernandez
 - Abril Caruso
 
+## Links
+- Teórico: https://docs.google.com/document/d/1hbr5NnRzI0KIAWgHG1wK1nD987k4FxwzlqMqY79ZSWM
+
 ## Capturas
 
 (Agregar)
