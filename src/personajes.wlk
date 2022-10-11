@@ -23,40 +23,46 @@ object escenarioRondaLabel {
 object escenario {
 	const especies = [esqueleto, fantasma, mago, helado, demonio]
 	var ronda = 1
-	var enemigo = new Enemigo(especie = esqueleto)
-	var ronda2 = 1
+	var indice = 1
 	const cantEnemigos = especies.size()
+	var enemigo = new Enemigo(especie = esqueleto)
 	
 	method ronda() = ronda
-	method ronda2(_ronda2) {
-		ronda2 = _ronda2
+	method indice() = indice
+	
+	method indice(_indice) {
+		indice = _indice
 	}
 
 	method enemigo() = enemigo
 	
-	method enemigoDeLaRonda(indice) = especies.get(indice-1) // considerando que indice > 1
-	
+	method enemigoDeLaRonda(index) = especies.get(index-1) // Considerando que indice > 1
 	
 	method siguienteRonda() {
 		ronda += 1
-		ronda2 += 1
+		indice += 1
 
-		if(ronda2 <= cantEnemigos) {
-			enemigo = new Enemigo(especie = self.enemigoDeLaRonda(ronda2))
-       		} else if (ronda2 > cantEnemigos){
-        	self.ronda2(1)
-        	enemigo = new Enemigo(especie = self.enemigoDeLaRonda(ronda2))
-        	}
+		if(indice <= cantEnemigos && ronda % 5 != 0) {
+			enemigo = new Enemigo(especie = self.enemigoDeLaRonda(indice))
+       	} else if (indice > cantEnemigos && ronda % 5 != 0){
+        	self.indice(1)
+        	enemigo = new Enemigo(especie = self.enemigoDeLaRonda(indice))
+        } else {
+        	enemigo = new Boss(especie = self.enemigoDeLaRonda(indice), item = tienda.itemsPosibles().anyOne())
+        }
+        
 		game.addVisual(enemigo)
 		enemigoBarraVida.actualizarBarraVida()
 		enemigo.iniciarAtaques()
-		}
+	}
 }
 
 
 /* Monedas */
 object monedas {
 	var cantidad = 0
+	
+	method cantidad() = cantidad
 	
 	method cantidad(_cantidad) {
 		cantidad = _cantidad
@@ -195,13 +201,13 @@ object hero {
 	var image = idleImage
 	var position = game.at(3,2)
 	
-	var vida = 100
-	var ataque = 50
+	var vida = 1000
+	var ataque = 500
 	var probCritico = 5
 	var lentitud = 3 /* Máx. 4 */
-	var defensa = 0
+	var defensa = 5
 	var probEsquive = 5
-	var monedero = 0
+	var monedero = 10000
 	
 	var puedeAtacar = true
 	var muerto = false
@@ -229,7 +235,6 @@ object hero {
 	method mamporroImage(_mamporroImage){
 		mamporroImage = _mamporroImage
 	}
-	
 
 	method position() = position
 	method image() = image
@@ -460,7 +465,7 @@ class Enemigo {
 	}
 	
 	method soltarMonedas() {
-		monedas.cantidad(especie.drop())
+		monedas.cantidad((escenario.ronda() * 2).randomUpTo(4 * escenario.ronda() + 1).truncate(0))
 		game.addVisual(monedas)
 	}
 	
@@ -469,7 +474,7 @@ class Enemigo {
 		game.schedule((especie.lentitud() * 1000)/2 + 1, {image = especie.deadImage()})
 		game.schedule((especie.lentitud() * 1000)/2 + 1, {self.soltarMonedas()})
 		game.schedule(3000, {game.removeVisual(monedas)})
-		game.schedule(3000, {hero.agarrarMonedas(especie.drop())})
+		game.schedule(3000, {hero.agarrarMonedas(monedas.cantidad())})
 		game.schedule(3000, {game.removeVisual(escenario.enemigo())})
 		game.schedule(4000, {escenario.siguienteRonda()})
 	}
@@ -481,12 +486,12 @@ class Boss inherits Enemigo {
 	override method morir(){
 		game.removeTickEvent("ataque")
 		game.schedule((especie.lentitud() * 1000)/2 + 1, {image = especie.deadImage()})
-		game.schedule((especie.lentitud() * 1000)/2 + 1, {game.addVisual(item)})
 		game.schedule((especie.lentitud() * 1000)/2 + 1, {self.soltarMonedas()})
-		game.schedule(3000, {game.removeVisual(item)})
+		game.schedule((especie.lentitud() * 1000)/2 + 10, {game.addVisual(item)})
 		game.schedule(3000, {game.removeVisual(monedas)})
+		game.schedule(3000, {game.removeVisual(item)})
 		game.schedule(3000, {item.serAgarrado()})
-		game.schedule(3000, {hero.agarrarMonedas(especie.drop())})
+		game.schedule(3000, {hero.agarrarMonedas(monedas.cantidad())})
 		game.schedule(3000, {game.removeVisual(escenario.enemigo())})
 		game.schedule(4000, {escenario.siguienteRonda()})
 	}
@@ -497,10 +502,9 @@ class Boss inherits Enemigo {
 object esqueleto {
 	method posicion() = game.at(5,2)
 	method vida() = 100
-	method ataque() = 5 + ((escenario.ronda()/5) ** 2).truncate(0)
+	method ataque() = (10 * (escenario.indice() * 1.2) ** (escenario.ronda()/2)).truncate(0)
 	method lentitud() = 1.5 /* Máx. 4 */
-	method defensa() = 5 + ((escenario.ronda()/5) ** 1.5).truncate(0)
-	method drop() = (escenario.ronda()).randomUpTo(2 * (escenario.ronda()+1)).truncate(0)
+	method defensa() = (5 * (escenario.indice() * 1.2) ** (escenario.ronda()/2)).truncate(0)
 	method originalImage() = "enemy3.png"
 	method atkImage() = "enemy3_atk.png"
 	method deadImage() = "enemy3_dead.png"
@@ -509,22 +513,31 @@ object esqueleto {
 object fantasma {
 	method posicion() = game.at(4,2)
 	method vida() = 100
-	method ataque() = 5 + ((escenario.ronda()/5) ** 3).truncate(0)
+	method ataque() = (14 * escenario.indice() ** (escenario.ronda()/14)).truncate(0)
 	method lentitud() = 3 /* Máx. 4 */
-	method defensa() = 5 + ((escenario.ronda()/5) ** 2.5).truncate(0)
-	method drop() = (escenario.ronda()).randomUpTo(3 * (escenario.ronda()+1)).truncate(0)
+	method defensa() = (10 * escenario.indice() ** (escenario.ronda()/10)).truncate(0)
 	method originalImage() = "enemy4.png"
 	method atkImage() = "enemy4_atk.png"
 	method deadImage() = "enemy4_dead.png"
 }
 
+object mago {
+	method posicion() = game.at(4,2)
+	method vida() = 100
+	method ataque() = (16 * escenario.indice() ** (escenario.ronda()/16)).truncate(0)
+	method lentitud() = 2.5 /* Máx. 4 */
+	method defensa() = (10 * escenario.indice() ** (escenario.ronda()/10)).truncate(0)
+	method originalImage() = "enemy5.png"
+	method atkImage() = "enemy5_atk.png"
+	method deadImage() = "enemy5_dead.png"
+}
+
 object helado {
 	method posicion() = game.at(5,2)
 	method vida() = 100
-	method ataque() = 5 + ((escenario.ronda()/5) ** 2).truncate(0)
+	method ataque() = (16 * escenario.indice() ** (escenario.ronda()/16)).truncate(0)
 	method lentitud() = 4 /* Máx. 4 */
-	method defensa() = 10 + ((escenario.ronda()/5) ** 4).truncate(0)
-	method drop() = (escenario.ronda()).randomUpTo(4 * (escenario.ronda()+1)).truncate(0)
+	method defensa() = (hero.ataque()*2 - 1).min((20 * escenario.indice() ** (escenario.ronda()/14)).truncate(0))
 	method originalImage() = "enemy2.png"
 	method atkImage() = "enemy2_atk.png"
 	method deadImage() = "enemy2_dead.png"
@@ -533,23 +546,10 @@ object helado {
 object demonio {
 	method posicion() = game.at(5,2)
 	method vida() = 100
-	method ataque() = 10 + ((escenario.ronda()/5) ** 4).truncate(0)
+	method ataque() = (20 * escenario.indice() ** (escenario.ronda()/20)).truncate(0)
 	method lentitud() = 2 /* Máx. 4 */
-	method defensa() = 5 + ((escenario.ronda()/5) ** 2).truncate(0)
-	method drop() = (escenario.ronda()).randomUpTo(4 * (escenario.ronda()+1)).truncate(0)
+	method defensa() = (14 * escenario.indice() ** (escenario.ronda()/14)).truncate(0)
 	method originalImage() = "enemy1.png"
 	method atkImage() = "enemy1_atk.png"
 	method deadImage() = "enemy1_dead.png"
-}
-
-object mago {
-	method posicion() = game.at(4,2)
-	method vida() = 100
-	method ataque() = 10 + ((escenario.ronda()/5) ** 4).truncate(0)
-	method lentitud() = 2.5 /* Máx. 4 */
-	method defensa() = 10 + ((escenario.ronda()/5) ** 2.5).truncate(0)
-	method drop() = (escenario.ronda()).randomUpTo(5 * (escenario.ronda()+1)).truncate(0)
-	method originalImage() = "enemy5.png"
-	method atkImage() = "enemy5_atk.png"
-	method deadImage() = "enemy5_dead.png"
 }

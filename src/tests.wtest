@@ -1,5 +1,5 @@
-import personajes.*
 import juego.*
+import personajes.*
 
 describe "tests del juego" {
 

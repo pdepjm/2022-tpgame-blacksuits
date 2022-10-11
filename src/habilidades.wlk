@@ -6,7 +6,7 @@ import personajes.*
 /* Tienda de Habilidades */
 object selectorH {
 	var habilidadSeleccionada
-	var position = game.at(10, tiendaH.origenTienda())
+	var position = game.at(10, tiendaH.origenTienda() + 2)
 	const image = "selector.png"
 	
 	method position() = position
@@ -91,18 +91,24 @@ object limiteSuperior{
 /* Habilidades */
 class Habilidad {
 	const posY = 0
+	var image = ""
+	const lightImage = ""
 	var puedeSerUsada = true
 	var cooldown = 0
 	const precio = 0
 	var comprada = false
 	
 	method position() = game.at(10, posY)
+	method image() = image
+	method text() = "   " + self.cooldown()/1000
+	method textColor() = "CA5CDD"
 	
 	method precio() = precio
 	method comprada() = comprada
 	method habilidad() = self
 	
 	method comprada(_comprada){
+		image = lightImage
 		comprada = _comprada
 	}
 	
@@ -126,15 +132,11 @@ class Habilidad {
 
 
 object habilidadNula inherits Habilidad {
-	method text() = ""
+	override method text() = ""
 	override method accionar() {}
 }
 
-object disparo inherits Habilidad(posY = tiendaH.origenTienda() + 2, precio = 200) {
-	method image() = "habilidad2.png"
-	method text() = "   " + self.cooldown()/1000
-	method textColor() = "CA5CDD"
-	
+object disparo inherits Habilidad(posY = tiendaH.origenTienda() + 2, image = "habilidad2_dark.png", lightImage = "habilidad2.png", precio = 100) {
 	override method accionar() {
 		if (puedeSerUsada) {
 			if(superCritico.activado()){
@@ -146,18 +148,14 @@ object disparo inherits Habilidad(posY = tiendaH.origenTienda() + 2, precio = 20
 			heroChat.position(game.at(4,3))
 			game.schedule((hero.lentitud() * 1000)/2, {hero.image(hero.idleImage())})
 			game.schedule((hero.lentitud() * 1000)/2, {heroChat.position(game.at(3,3))})
-			escenario.enemigo().recibirDanio(hero.ataque() * 1.5)
+			escenario.enemigo().recibirDanio(hero.ataque() * 2)
 			self.cooldown(45)
 		}
 	}
 }
 
-object superCritico inherits Habilidad(posY = tiendaH.origenTienda() +  1, precio = 500) {
+object superCritico inherits Habilidad(posY = tiendaH.origenTienda() +  1, image = "habilidad3_dark.png", lightImage = "habilidad3.png", precio = 250) {
 	var activado = false
-	
-	method image() = "habilidad3.png"
-	method text() = "   " + self.cooldown()/1000
-	method textColor() = "CA5CDD"
 	
 	method activado() = activado
 	
@@ -175,11 +173,7 @@ object superCritico inherits Habilidad(posY = tiendaH.origenTienda() +  1, preci
 	}
 }
 
-object mamporro inherits Habilidad(posY = tiendaH.origenTienda(), precio = 1000) {
-	method image() = "habilidad1.png"
-	method text() = "   " + self.cooldown()/1000
-	method textColor() = "CA5CDD"
-	
+object mamporro inherits Habilidad(posY = tiendaH.origenTienda(), image = "habilidad1_dark.png", lightImage = "habilidad1.png", precio = 500) {
 	override method accionar() {
 		if (puedeSerUsada) {
 			if(superCritico.activado()){

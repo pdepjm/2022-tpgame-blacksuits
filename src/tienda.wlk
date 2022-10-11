@@ -47,12 +47,12 @@ object tienda {
 	
 	method rellenarItemsPosibles() {
 		const nuevosItemsPosibles = []
-		const probVida = 25
-		const probAtaque = 20
-		const probDefensa = 20
-		var probVelocidad = 15
-		var probCritico = 10
-		var probEsquive = 10
+		const probVida = 35
+		const probAtaque = 25
+		const probDefensa = 30
+		var probVelocidad = 5
+		var probCritico = 2.5
+		var probEsquive = 2.5
 		
 		if(hero.lentitud() == 0){
 			probVelocidad = 0
@@ -165,8 +165,8 @@ class Item {
 
 object itemNulo inherits Item(image = "") {}
 
-class BuffVida inherits Item(image = "itemVida.png", nombre = "una poción de Vida", precio = 10.randomUpTo(50+1).truncate(0)) {
-	override method vida() = precio
+class BuffVida inherits Item(image = "itemVida.png", nombre = "una poción de Vida", precio = 5.randomUpTo((25)+1).truncate(0) + escenario.ronda() * 2) {
+	override method vida() = 2 * (5.randomUpTo((25)+1).truncate(0))
 }
 
 class BuffAtaque inherits Item(image = "itemAtaque.png", nombre = "un boost de Ataque", precio = 3 * escenario.ronda()) {
