@@ -148,7 +148,7 @@ object disparo inherits Habilidad(posY = tiendaH.origenTienda() + 2, image = "ha
 			game.schedule((hero.lentitud() * 1000)/2, {hero.image(hero.idleImage())})
 			game.schedule((hero.lentitud() * 1000)/2, {heroChat.position(game.at(3,3))})
 			escenario.enemigo().recibirDanio(hero.ataque() * 2)
-			self.cooldown(45)
+			self.cooldown(20)
 		}
 	}
 }
@@ -167,7 +167,7 @@ object superCritico inherits Habilidad(posY = tiendaH.origenTienda() +  1, image
 			hero.critImage("hero_atk_crit_super.png")
 			hero.atacar()
 			game.schedule(15 * 1000, {activado = false hero.probCritico(-50) hero.idleImage("hero.png") hero.atkImage("hero_atk.png") hero.critImage("hero_atk_crit.png")})
-			self.cooldown(75)
+			self.cooldown(30)
 		}
 	}
 }
@@ -187,7 +187,7 @@ object mamporro inherits Habilidad(posY = tiendaH.origenTienda(), image = "habil
 			game.schedule((hero.lentitud() * 1000)/2, {heroChat.position(game.at(3,3))})
 			game.schedule((hero.lentitud() * 1000)/2, {hero.image(hero.idleImage())})
 			escenario.enemigo().recibirDanio(hero.ataque() * 3)
-			self.cooldown(90)
+			self.cooldown(45)
 		}
 	}
 }

@@ -201,8 +201,8 @@ object hero {
 	var image = idleImage
 	var position = game.at(3,2)
 	
-	var vida = 100
-	var ataque = 50
+	var vida = 1000
+	var ataque = 500
 	var probCritico = 5
 	var lentitud = 3 /* Máx. 4 */
 	var defensa = 5
@@ -519,16 +519,16 @@ class Especie {
 }
 
 object esqueleto inherits Especie(position = game.at(5,2), ataque = 10, lentitud = 1.5, defensa = 5, originalImage = "enemy3.png", atkImage = "enemy3_atk.png", deadImage = "enemy3_dead.png"){
-	override method ataque() = (ataque * (escenario.indice() * 1.2) ** (escenario.ronda()/2)).truncate(0)
-	override method defensa() = (defensa * (escenario.indice() * 1.2) ** (escenario.ronda()/2)).truncate(0)
+	override method ataque() = (ataque * (escenario.indice() * 1.1) ** (escenario.ronda()/2)).truncate(0)
+	override method defensa() = (defensa * (escenario.indice() * 1.1) ** (escenario.ronda()/2)).truncate(0)
 }
 
-const fantasma = new Especie(position = game.at(4,2), ataque = 14, lentitud = 3, defensa = 10, originalImage = "enemy4.png", atkImage = "enemy4_atk.png", deadImage = "enemy4_dead.png")
+const fantasma = new Especie(position = game.at(4,2), ataque = 12, lentitud = 3, defensa = 8, originalImage = "enemy4.png", atkImage = "enemy4_atk.png", deadImage = "enemy4_dead.png")
 
-const mago = new Especie(position = game.at(4,2), ataque = 16, lentitud = 2.5, defensa = 10, originalImage = "enemy5.png", atkImage = "enemy5_atk.png", deadImage = "enemy5_dead.png")
+const mago = new Especie(position = game.at(4,2), ataque = 12, lentitud = 2.5, defensa = 10, originalImage = "enemy5.png", atkImage = "enemy5_atk.png", deadImage = "enemy5_dead.png")
 
-object helado inherits Especie(position = game.at(5,2), ataque = 14, lentitud = 4, defensa = 20, originalImage = "enemy2.png", atkImage = "enemy2_atk.png", deadImage = "enemy2_dead.png"){
+object helado inherits Especie(position = game.at(5,2), ataque = 10, lentitud = 4, defensa = 13, originalImage = "enemy2.png", atkImage = "enemy2_atk.png", deadImage = "enemy2_dead.png"){
 	override method defensa() = (hero.ataque() * 2 - 1).min((defensa * escenario.indice() ** (escenario.ronda()/16)).truncate(0))
 }
 
-const demonio = new Especie(position = game.at(5,2), ataque = 20, lentitud = 2, defensa = 14, originalImage = "enemy1.png", atkImage = "enemy1_atk.png", deadImage = "enemy1_dead.png")
+const demonio = new Especie(position = game.at(5,2), ataque = 13, lentitud = 2, defensa = 10, originalImage = "enemy1.png", atkImage = "enemy1_atk.png", deadImage = "enemy1_dead.png")
