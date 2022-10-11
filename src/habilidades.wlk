@@ -130,7 +130,6 @@ class Habilidad {
 	method accionar()
 }
 
-
 object habilidadNula inherits Habilidad {
 	override method text() = ""
 	override method accionar() {}

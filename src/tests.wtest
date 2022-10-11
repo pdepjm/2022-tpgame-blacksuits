@@ -14,5 +14,4 @@ describe "tests del juego" {
         enemigoEjemplo.recibirDanio(10)
         assert.that(enemigoEjemplo.vida() == 100 - (10 - enemigoEjemplo.especie().defensa()))
     }
-
 }
