@@ -487,69 +487,48 @@ class Boss inherits Enemigo {
 		game.removeTickEvent("ataque")
 		game.schedule((especie.lentitud() * 1000)/2 + 1, {image = especie.deadImage()})
 		game.schedule((especie.lentitud() * 1000)/2 + 1, {self.soltarMonedas()})
-		game.schedule((especie.lentitud() * 1000)/2 + 10, {game.addVisual(item)})
+		game.schedule((especie.lentitud() * 1000)/2 + 100, {game.addVisual(item)})
+		game.schedule(3000, {game.removeVisual(escenario.enemigo())})
 		game.schedule(3000, {game.removeVisual(monedas)})
 		game.schedule(3000, {game.removeVisual(item)})
 		game.schedule(3000, {item.serAgarrado()})
 		game.schedule(3000, {hero.agarrarMonedas(monedas.cantidad())})
-		game.schedule(3000, {game.removeVisual(escenario.enemigo())})
 		game.schedule(4000, {escenario.siguienteRonda()})
 	}
 }
 
 
-/* Especies de Enemigos */
-object esqueleto {
-	method posicion() = game.at(5,2)
+/* Especies */
+class Especie {
+	const position
+	const ataque
+	const lentitud /* Máx. 4 */
+	const defensa
+	const originalImage
+	const atkImage
+	const deadImage
+	
+	method posicion() = position
 	method vida() = 100
-	method ataque() = (10 * (escenario.indice() * 1.2) ** (escenario.ronda()/2)).truncate(0)
-	method lentitud() = 1.5 /* Máx. 4 */
-	method defensa() = (5 * (escenario.indice() * 1.2) ** (escenario.ronda()/2)).truncate(0)
-	method originalImage() = "enemy3.png"
-	method atkImage() = "enemy3_atk.png"
-	method deadImage() = "enemy3_dead.png"
+	method ataque() = (ataque * escenario.indice() ** (escenario.ronda()/16)).truncate(0)
+	method lentitud() = lentitud
+	method defensa() = (defensa * escenario.indice() ** (escenario.ronda()/16)).truncate(0)
+	method originalImage() = originalImage
+	method atkImage() = atkImage
+	method deadImage() = deadImage
 }
 
-object fantasma {
-	method posicion() = game.at(4,2)
-	method vida() = 100
-	method ataque() = (14 * escenario.indice() ** (escenario.ronda()/14)).truncate(0)
-	method lentitud() = 3 /* Máx. 4 */
-	method defensa() = (10 * escenario.indice() ** (escenario.ronda()/10)).truncate(0)
-	method originalImage() = "enemy4.png"
-	method atkImage() = "enemy4_atk.png"
-	method deadImage() = "enemy4_dead.png"
+object esqueleto inherits Especie(position = game.at(5,2), ataque = 10, lentitud = 1.5, defensa = 5, originalImage = "enemy3.png", atkImage = "enemy3_atk.png", deadImage = "enemy3_dead.png"){
+	override method ataque() = (ataque * (escenario.indice() * 1.2) ** (escenario.ronda()/2)).truncate(0)
+	override method defensa() = (defensa * (escenario.indice() * 1.2) ** (escenario.ronda()/2)).truncate(0)
 }
 
-object mago {
-	method posicion() = game.at(4,2)
-	method vida() = 100
-	method ataque() = (16 * escenario.indice() ** (escenario.ronda()/16)).truncate(0)
-	method lentitud() = 2.5 /* Máx. 4 */
-	method defensa() = (10 * escenario.indice() ** (escenario.ronda()/10)).truncate(0)
-	method originalImage() = "enemy5.png"
-	method atkImage() = "enemy5_atk.png"
-	method deadImage() = "enemy5_dead.png"
+const fantasma = new Especie(position = game.at(4,2), ataque = 14, lentitud = 3, defensa = 10, originalImage = "enemy4.png", atkImage = "enemy4_atk.png", deadImage = "enemy4_dead.png")
+
+const mago = new Especie(position = game.at(4,2), ataque = 16, lentitud = 2.5, defensa = 10, originalImage = "enemy5.png", atkImage = "enemy5_atk.png", deadImage = "enemy5_dead.png")
+
+object helado inherits Especie(position = game.at(5,2), ataque = 14, lentitud = 4, defensa = 20, originalImage = "enemy2.png", atkImage = "enemy2_atk.png", deadImage = "enemy2_dead.png"){
+	override method defensa() = (hero.ataque() * 2 - 1).min((defensa * escenario.indice() ** (escenario.ronda()/16)).truncate(0))
 }
 
-object helado {
-	method posicion() = game.at(5,2)
-	method vida() = 100
-	method ataque() = (16 * escenario.indice() ** (escenario.ronda()/16)).truncate(0)
-	method lentitud() = 4 /* Máx. 4 */
-	method defensa() = (hero.ataque()*2 - 1).min((20 * escenario.indice() ** (escenario.ronda()/14)).truncate(0))
-	method originalImage() = "enemy2.png"
-	method atkImage() = "enemy2_atk.png"
-	method deadImage() = "enemy2_dead.png"
-}
-
-object demonio {
-	method posicion() = game.at(5,2)
-	method vida() = 100
-	method ataque() = (20 * escenario.indice() ** (escenario.ronda()/20)).truncate(0)
-	method lentitud() = 2 /* Máx. 4 */
-	method defensa() = (14 * escenario.indice() ** (escenario.ronda()/14)).truncate(0)
-	method originalImage() = "enemy1.png"
-	method atkImage() = "enemy1_atk.png"
-	method deadImage() = "enemy1_dead.png"
-}
+const demonio = new Especie(position = game.at(5,2), ataque = 20, lentitud = 2, defensa = 14, originalImage = "enemy1.png", atkImage = "enemy1_atk.png", deadImage = "enemy1_dead.png")
