@@ -201,8 +201,8 @@ object hero {
 	var image = idleImage
 	var position = game.at(3,2)
 	
-	var vida = 1000
-	var ataque = 500
+	var vida = 100
+	var ataque = 50
 	var probCritico = 5
 	var lentitud = 3 /* Máx. 4 */
 	var defensa = 5
