@@ -465,7 +465,7 @@ class Enemigo {
 	}
 	
 	method soltarMonedas() {
-		monedas.cantidad((escenario.ronda() * 3).randomUpTo(4 * escenario.ronda() + 1).truncate(0))
+		monedas.cantidad((escenario.ronda()).randomUpTo(5 * escenario.ronda() + 1).truncate(0))
 		game.addVisual(monedas)
 	}
 	
@@ -524,8 +524,6 @@ const fantasma = new Especie(position = game.at(4,2), ataque = 6, lentitud = 3, 
 
 const mago = new Especie(position = game.at(4,2), ataque = 6, lentitud = 2.5, defensa = 7, originalImage = "enemy5.png", atkImage = "enemy5_atk.png", deadImage = "enemy5_dead.png")
 
-object helado inherits Especie(position = game.at(5,2), ataque = 6, lentitud = 4, defensa = 8, originalImage = "enemy2.png", atkImage = "enemy2_atk.png", deadImage = "enemy2_dead.png"){
-	override method defensa() = (hero.ataque() * 2 - 1).min((ataque * 1.1 ** (escenario.ronda())).truncate(0))
-}
+const helado = new Especie(position = game.at(5,2), ataque = 6, lentitud = 4, defensa = 8, originalImage = "enemy2.png", atkImage = "enemy2_atk.png", deadImage = "enemy2_dead.png")
 
 const demonio = new Especie(position = game.at(5,2), ataque = 8, lentitud = 2, defensa = 6, originalImage = "enemy1.png", atkImage = "enemy1_atk.png", deadImage = "enemy1_dead.png")

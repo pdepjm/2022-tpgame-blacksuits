@@ -162,12 +162,12 @@ class BuffVida inherits Item(image = "itemVida.png", nombre = "una poción de Vi
 	override method vida() = (25.randomUpTo(50+1)).truncate(0)
 }
 
-class BuffAtaque inherits Item(image = "itemAtaque.png", nombre = "un boost de Ataque", precio = 3 * escenario.ronda()) {
-	override method ataque() = precio * 2
+class BuffAtaque inherits Item(image = "itemAtaque.png", nombre = "un boost de Ataque", precio = 2 * escenario.ronda()) {
+	override method ataque() = 10
 }
 
-class BuffDefensa inherits Item(image = "itemDefensa.png", nombre = "una mejora de Defensa", precio = 3 * escenario.ronda()) {
-	override method defensa() = precio * 2
+class BuffDefensa inherits Item(image = "itemDefensa.png", nombre = "una mejora de Defensa", precio = 2 * escenario.ronda()) {
+	override method defensa() = 10
 }
 
 class BuffVelocidad inherits Item(image = "itemVelocidad.png", nombre = "una mejora de Velocidad", precio = 5 * escenario.ronda()) {
