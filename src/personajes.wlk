@@ -205,7 +205,7 @@ object hero {
 	var ataque = 50
 	var probCritico = 5
 	var lentitud = 3 /* Máx. 4 */
-	var defensa = 5
+	var defensa = 0
 	var probEsquive = 5
 	var monedero = 0
 	
@@ -465,7 +465,7 @@ class Enemigo {
 	}
 	
 	method soltarMonedas() {
-		monedas.cantidad((escenario.ronda() * 2).randomUpTo(4 * escenario.ronda() + 1).truncate(0))
+		monedas.cantidad((escenario.ronda() * 3).randomUpTo(4 * escenario.ronda() + 1).truncate(0))
 		game.addVisual(monedas)
 	}
 	
@@ -510,25 +510,22 @@ class Especie {
 	
 	method posicion() = position
 	method vida() = 100
-	method ataque() = (ataque * escenario.indice() ** (escenario.ronda()/16)).truncate(0)
+	method ataque() = ataque * escenario.ronda()
 	method lentitud() = lentitud
-	method defensa() = (defensa * escenario.indice() ** (escenario.ronda()/16)).truncate(0)
+	method defensa() = defensa * escenario.ronda()
 	method originalImage() = originalImage
 	method atkImage() = atkImage
 	method deadImage() = deadImage
 }
 
-object esqueleto inherits Especie(position = game.at(5,2), ataque = 10, lentitud = 1.5, defensa = 5, originalImage = "enemy3.png", atkImage = "enemy3_atk.png", deadImage = "enemy3_dead.png"){
-	override method ataque() = (ataque * (escenario.indice() * 1.1) ** (escenario.ronda()/2)).truncate(0)
-	override method defensa() = (defensa * (escenario.indice() * 1.1) ** (escenario.ronda()/2)).truncate(0)
+const esqueleto = new Especie(position = game.at(5,2), ataque = 5, lentitud = 1.5, defensa = 3, originalImage = "enemy3.png", atkImage = "enemy3_atk.png", deadImage = "enemy3_dead.png")
+
+const fantasma = new Especie(position = game.at(4,2), ataque = 6, lentitud = 3, defensa = 6, originalImage = "enemy4.png", atkImage = "enemy4_atk.png", deadImage = "enemy4_dead.png")
+
+const mago = new Especie(position = game.at(4,2), ataque = 6, lentitud = 2.5, defensa = 7, originalImage = "enemy5.png", atkImage = "enemy5_atk.png", deadImage = "enemy5_dead.png")
+
+object helado inherits Especie(position = game.at(5,2), ataque = 6, lentitud = 4, defensa = 8, originalImage = "enemy2.png", atkImage = "enemy2_atk.png", deadImage = "enemy2_dead.png"){
+	override method defensa() = (hero.ataque() * 2 - 1).min((ataque * 1.1 ** (escenario.ronda())).truncate(0))
 }
 
-const fantasma = new Especie(position = game.at(4,2), ataque = 12, lentitud = 3, defensa = 8, originalImage = "enemy4.png", atkImage = "enemy4_atk.png", deadImage = "enemy4_dead.png")
-
-const mago = new Especie(position = game.at(4,2), ataque = 12, lentitud = 2.5, defensa = 10, originalImage = "enemy5.png", atkImage = "enemy5_atk.png", deadImage = "enemy5_dead.png")
-
-object helado inherits Especie(position = game.at(5,2), ataque = 10, lentitud = 4, defensa = 13, originalImage = "enemy2.png", atkImage = "enemy2_atk.png", deadImage = "enemy2_dead.png"){
-	override method defensa() = (hero.ataque() * 2 - 1).min((defensa * escenario.indice() ** (escenario.ronda()/16)).truncate(0))
-}
-
-const demonio = new Especie(position = game.at(5,2), ataque = 13, lentitud = 2, defensa = 10, originalImage = "enemy1.png", atkImage = "enemy1_atk.png", deadImage = "enemy1_dead.png")
+const demonio = new Especie(position = game.at(5,2), ataque = 8, lentitud = 2, defensa = 6, originalImage = "enemy1.png", atkImage = "enemy1_atk.png", deadImage = "enemy1_dead.png")

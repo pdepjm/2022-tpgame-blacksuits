@@ -132,25 +132,18 @@ object limiteDerecho{
 class Item {
 	const image
 	const nombre = ""
-	const vida = 0
-	const ataque = 0
-	const probCritico = 0
-	const lentitud = 0
-	const defensa = 0
-	const probEsquive = 0
 	const precio = 0
 	
 	method position() = game.at(5,2)
 	method image() = image
-	
 	method nombre() = nombre
-	method vida() = vida
-	method ataque() = ataque
-	method probCritico() = probCritico
-	method lentitud() = lentitud
-	method defensa() = defensa
-	method probEsquive() = probEsquive
 	method precio() = precio
+	method vida() = 0
+	method ataque() = 0
+	method probCritico() = 0
+	method lentitud() = 0
+	method defensa() = 0
+	method probEsquive() = 0
 	
 	method serAgarrado() {
 		hero.vida(self.vida())
@@ -165,16 +158,16 @@ class Item {
 
 object itemNulo inherits Item(image = "") {}
 
-class BuffVida inherits Item(image = "itemVida.png", nombre = "una poción de Vida", precio = (5.randomUpTo((15)+1)).truncate(0) + (escenario.ronda() * 1.5).truncate(0)) {
-	override method vida() = 3 * (precio - (escenario.ronda() * 1.5).truncate(0))
+class BuffVida inherits Item(image = "itemVida.png", nombre = "una poción de Vida", precio = 2 * escenario.ronda()) {
+	override method vida() = (25.randomUpTo(50+1)).truncate(0)
 }
 
 class BuffAtaque inherits Item(image = "itemAtaque.png", nombre = "un boost de Ataque", precio = 3 * escenario.ronda()) {
-	override method ataque() = (escenario.ronda() * 1.2).truncate(0)
+	override method ataque() = precio * 1.5
 }
 
-class BuffDefensa inherits Item(image = "itemDefensa.png", nombre = "una mejora de Defensa", precio = 5 * escenario.ronda()) {
-	override method defensa() = (escenario.ronda() * 1.2).truncate(0)
+class BuffDefensa inherits Item(image = "itemDefensa.png", nombre = "una mejora de Defensa", precio = 3 * escenario.ronda()) {
+	override method defensa() = precio * 1.5
 }
 
 class BuffVelocidad inherits Item(image = "itemVelocidad.png", nombre = "una mejora de Velocidad", precio = 5 * escenario.ronda()) {
