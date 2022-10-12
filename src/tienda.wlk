@@ -1,6 +1,5 @@
 import wollok.game.*
 import funciones.*
-import juego.*
 import personajes.*
 
 /* Tienda */
@@ -47,14 +46,15 @@ object tienda {
 	
 	method rellenarItemsPosibles() {
 		const nuevosItemsPosibles = []
-		const probVida = 30
-		const probAtaque = 25
-		const probDefensa = 30
+		const probVida = 15
+		const probAtaque = 32
+		const probDefensa = 32
+		const probCombinado = 10
 		var probVelocidad = 5
-		var probCritico = 5
-		var probEsquive = 5
+		var probCritico = 3
+		var probEsquive = 3
 		
-		if(hero.lentitud() == 0){
+		if(hero.lentitud() == 0.5){
 			probVelocidad = 0
 		}
 		if(hero.probCritico() == 100){
@@ -67,6 +67,7 @@ object tienda {
  		funciones.addNVeces(nuevosItemsPosibles, probVida, new BuffVida())
  		funciones.addNVeces(nuevosItemsPosibles, probAtaque, new BuffAtaque())
  		funciones.addNVeces(nuevosItemsPosibles, probDefensa, new BuffDefensa())
+ 		funciones.addNVeces(nuevosItemsPosibles, probCombinado, new BuffCombinado())
  		funciones.addNVeces(nuevosItemsPosibles, probVelocidad, new BuffVelocidad())
  		funciones.addNVeces(nuevosItemsPosibles, probCritico, new BuffCritico())
  		funciones.addNVeces(nuevosItemsPosibles, probEsquive, new BuffEsquive())
@@ -170,14 +171,19 @@ class BuffDefensa inherits Item(image = "itemDefensa.png", nombre = "una mejora 
 	override method defensa() = 10
 }
 
+class BuffCombinado inherits Item(image = "itemCombinado.png", nombre = "un boost de Ataque y Defensa", precio = 2 * escenario.ronda()) {
+	override method ataque() = 10
+	override method defensa() = 10
+}
+
 class BuffVelocidad inherits Item(image = "itemVelocidad.png", nombre = "una mejora de Velocidad", precio = 5 * escenario.ronda()) {
-	override method lentitud() = 0.5
+	override method lentitud() = 0.25
 }
 
 class BuffCritico inherits Item(image = "itemCritico.png", nombre = "un aumento de Crítico", precio = 5 * escenario.ronda()) {
-	override method probCritico() = 10
+	override method probCritico() = 5
 }
 
-class BuffEsquive inherits Item(image = "itemEsquive.png", nombre = "un aumento de Esquive", precio = 10 * escenario.ronda()) {
-	override method probEsquive() = 10
+class BuffEsquive inherits Item(image = "itemEsquive.png", nombre = "un aumento de Esquive", precio = 5 * escenario.ronda()) {
+	override method probEsquive() = 5
 }

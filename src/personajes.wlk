@@ -1,8 +1,5 @@
 import wollok.game.*
-import funciones.*
-import juego.*
 import tienda.*
-import habilidades.*
 
 /* Escenario */
 object escenarioFondo {
@@ -202,7 +199,7 @@ object hero {
 	var position = game.at(3,2)
 	
 	var vida = 100
-	var ataque = 50
+	var ataque = 30
 	var probCritico = 5
 	var lentitud = 3 /* Máx. 4 */
 	var defensa = 0
@@ -270,7 +267,7 @@ object hero {
 	}
 	
 	method lentitud(_lentitud) {
-		lentitud = 0.max(lentitud - _lentitud)
+		lentitud = (0.5).max(lentitud - _lentitud)
 	}
 	
 	method defensa(_defensa) {
@@ -297,6 +294,7 @@ object hero {
 	method atacar() {
 		if(puedeAtacar && escenario.enemigo().vida() > 0 && !muerto){
 			puedeAtacar = false
+			monedero++
 			const randCritico = 1.randomUpTo(100+1).truncate(0)
 			if(randCritico <= probCritico){
 				escenario.enemigo().recibirDanio(ataque * 2)
@@ -465,7 +463,7 @@ class Enemigo {
 	}
 	
 	method soltarMonedas() {
-		monedas.cantidad((escenario.ronda()).randomUpTo(5 * escenario.ronda() + 1).truncate(0))
+		monedas.cantidad((escenario.ronda()).randomUpTo(3 * escenario.ronda() + 1).truncate(0))
 		game.addVisual(monedas)
 	}
 	
@@ -518,12 +516,12 @@ class Especie {
 	method deadImage() = deadImage
 }
 
-const esqueleto = new Especie(position = game.at(5,2), ataque = 5, lentitud = 1.5, defensa = 3, originalImage = "enemy3.png", atkImage = "enemy3_atk.png", deadImage = "enemy3_dead.png")
+const esqueleto = new Especie(position = game.at(5,2), ataque = 6, lentitud = 1.5, defensa = 5, originalImage = "enemy3.png", atkImage = "enemy3_atk.png", deadImage = "enemy3_dead.png")
 
-const fantasma = new Especie(position = game.at(4,2), ataque = 6, lentitud = 3, defensa = 6, originalImage = "enemy4.png", atkImage = "enemy4_atk.png", deadImage = "enemy4_dead.png")
+const fantasma = new Especie(position = game.at(4,2), ataque = 8, lentitud = 3, defensa = 6, originalImage = "enemy4.png", atkImage = "enemy4_atk.png", deadImage = "enemy4_dead.png")
 
-const mago = new Especie(position = game.at(4,2), ataque = 6, lentitud = 2.5, defensa = 7, originalImage = "enemy5.png", atkImage = "enemy5_atk.png", deadImage = "enemy5_dead.png")
+const mago = new Especie(position = game.at(4,2), ataque = 8, lentitud = 2.5, defensa = 7, originalImage = "enemy5.png", atkImage = "enemy5_atk.png", deadImage = "enemy5_dead.png")
 
 const helado = new Especie(position = game.at(5,2), ataque = 6, lentitud = 4, defensa = 8, originalImage = "enemy2.png", atkImage = "enemy2_atk.png", deadImage = "enemy2_dead.png")
 
-const demonio = new Especie(position = game.at(5,2), ataque = 8, lentitud = 2, defensa = 6, originalImage = "enemy1.png", atkImage = "enemy1_atk.png", deadImage = "enemy1_dead.png")
+const demonio = new Especie(position = game.at(5,2), ataque = 10, lentitud = 2, defensa = 6, originalImage = "enemy1.png", atkImage = "enemy1_atk.png", deadImage = "enemy1_dead.png")

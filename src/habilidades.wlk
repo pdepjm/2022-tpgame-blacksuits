@@ -1,6 +1,4 @@
 import wollok.game.*
-import funciones.*
-import juego.*
 import personajes.*
 
 /* Tienda de Habilidades */
@@ -135,7 +133,7 @@ object habilidadNula inherits Habilidad {
 	override method accionar() {}
 }
 
-object disparo inherits Habilidad(posY = tiendaH.origenTienda() + 2, image = "habilidad2_dark.png", lightImage = "habilidad2.png", precio = 100) {
+object disparo inherits Habilidad(posY = tiendaH.origenTienda() + 2, image = "habilidad2_dark.png", lightImage = "habilidad2.png", precio = 50) {
 	override method accionar() {
 		if (puedeSerUsada) {
 			if(superCritico.activado()){
@@ -153,7 +151,7 @@ object disparo inherits Habilidad(posY = tiendaH.origenTienda() + 2, image = "ha
 	}
 }
 
-object superCritico inherits Habilidad(posY = tiendaH.origenTienda() +  1, image = "habilidad3_dark.png", lightImage = "habilidad3.png", precio = 250) {
+object superCritico inherits Habilidad(posY = tiendaH.origenTienda() +  1, image = "habilidad3_dark.png", lightImage = "habilidad3.png", precio = 100) {
 	var activado = false
 	
 	method activado() = activado
@@ -172,7 +170,7 @@ object superCritico inherits Habilidad(posY = tiendaH.origenTienda() +  1, image
 	}
 }
 
-object mamporro inherits Habilidad(posY = tiendaH.origenTienda(), image = "habilidad1_dark.png", lightImage = "habilidad1.png", precio = 500) {
+object mamporro inherits Habilidad(posY = tiendaH.origenTienda(), image = "habilidad1_dark.png", lightImage = "habilidad1.png", precio = 200) {
 	override method accionar() {
 		if (puedeSerUsada) {
 			if(superCritico.activado()){
