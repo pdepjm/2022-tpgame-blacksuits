@@ -25,7 +25,7 @@ describe "tests del juego" {
         assert.that(hero.muerto())
     }
 
-    test "Si el heroe compra ataque, el ataque aumenta" {
+    /*test "Si el heroe compra ataque, el ataque aumenta" {
         game.addVisual(heroChat)
         hero.agarrarMonedas(100)
         itemTienda1.item(new BuffAtaque())
@@ -68,7 +68,7 @@ describe "tests del juego" {
         selector.itemSeleccionado(itemTienda1)
         selector.comprar()
         assert.that(hero.probEsquive() > 5)
-    }
+    }*/
     
     test "Cuando el heroe compra una habilidad, la habilidad esta disponible para ser usada" {
         mamporro.comprada(true)
