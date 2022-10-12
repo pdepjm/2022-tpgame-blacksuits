@@ -14,4 +14,45 @@ describe "tests del juego" {
         enemigoEjemplo.recibirDanio(10)
         assert.that(enemigoEjemplo.vida() == 100 - (10 - enemigoEjemplo.especie().defensa()))
     }
+
+    test "Cuando el heroe compra ataque en la tienda, se suma 10 de ataque" {
+    	assert.that(true)
+    }
+    
+    test "Cuando el heroe se queda sin vida, muere" {
+        assert.that(true)
+    }
+    
+    test "Cuando el heroe compra una pocion de vida, su vida aumenta" {
+        assert.that(true)
+    }
+
+    test "Cuando el heroe compra velocidad, se suma 0,5 de velocidad" {
+        assert.that(true)
+    }
+
+    test "Probar que sea un boss ?????" {
+        assert.that(true)
+    }
+
+    test "Cuando el heroe compra una habilidad, la habilidad esta disponible para ser usada" {
+        assert.that(true)
+    }
+
+    test "El danio recibido por el heroe es igual a la defensa del heroe menos el ataque del enemigo" {
+        assert.that(true)
+    }
+    
+    test "Cuando el heroe usa la habilidad mamporro, el danio que recibe el enemigo es el triple del ataque del heroe" {
+        assert.that(true)
+    }
+
+    test "Test" {
+        assert.that(true)
+    }
+
+    test "Otro test" {
+        assert.that(true)
+    }
+
 }
