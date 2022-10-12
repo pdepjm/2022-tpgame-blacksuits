@@ -3,9 +3,9 @@
 ## Equipo de Desarrollo
 
 - Franco Modesto
-- Matias Oliva
+- Matías Oliva
 - Juan Pablo Castiglione
-- Maria Guadalupe Fernandez
+- María Guadalupe Fernández
 - Abril Caruso
 
 ## Links
