@@ -4,7 +4,7 @@ import personajes.*
 
 /* Tienda */
 object selector {
-	var itemTiendaSeleccionado
+	var itemSeleccionado
 	var position = game.at(tienda.origenTienda(), 0)
 	const image = "selector.png"
 	
@@ -19,17 +19,17 @@ object selector {
 		position = position.left(1)
 	}
 	
-	method itemSeleccionado() = itemTiendaSeleccionado
+	method itemSeleccionado() = itemSeleccionado
 	
 	method itemSeleccionado(item) {
-		itemTiendaSeleccionado = item
+		itemSeleccionado = item
 	}
 	
 	method comprar() {
-		const precioItem = itemTiendaSeleccionado.item().precio()
+		const precioItem = itemSeleccionado.item().precio()
 		if (hero.monedero() >= precioItem && !hero.muerto()) {
 			hero.pagar(precioItem)
-			itemTiendaSeleccionado.item().serAgarrado()
+			itemSeleccionado.item().serAgarrado()
 			tienda.randomizarSeleccionado()
 		} else if (!hero.muerto()) {
 			game.say(heroChat, "No me alcanza para eso!")
