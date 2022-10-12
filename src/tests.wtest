@@ -14,7 +14,7 @@ describe "tests del juego" {
         enemigoEjemplo.recibirDanio(10)
         assert.that(enemigoEjemplo.vida() == 100 - (10 - enemigoEjemplo.especie().defensa()))
     }
-
+/*
     test "Cuando el heroe compra ataque en la tienda, se suma 10 de ataque" {
     	assert.that(true)
     }
@@ -54,5 +54,5 @@ describe "tests del juego" {
     test "Otro test" {
         assert.that(true)
     }
-
+*/
 }
