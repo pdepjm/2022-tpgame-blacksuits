@@ -4,28 +4,26 @@ import personajes.*
 import tienda.*
 import habilidades.*
 
-describe "tests del juego" {
+describe "Tests del juego" {
 
-    const enemigoEjemplo = new Enemigo(especie = esqueleto)
-
-    test "Cuando el heroe recibe danio, a la vida se le resta el daño recibido menos la defensa" {
+    test "Cuando el hero recibe daño, a la vida se le resta el daño recibido menos la defensa" {
         hero.recibirDanio(10)
         assert.equals(hero.vida(), 100 - (10 - hero.defensa()))
     }
 
-    test "Cuando un enemigo recibe danio, a la vida se le resta el daño recibido menos la defensa" {
-        enemigoEjemplo.recibirDanio(10)
-        assert.equals(enemigoEjemplo.vida(), 100 - (10 - enemigoEjemplo.especie().defensa()))
+    test "Cuando un enemigo recibe daño, a la vida se le resta el daño recibido menos la defensa" {
+        escenario.enemigo().recibirDanio(10)
+        assert.equals(escenario.enemigo().vida(), 100 - (10 - escenario.enemigo().especie().defensa()))
     }
     
-    test "Cuando el heroe se queda sin vida, muere" {
+    test "Cuando el hero se queda sin vida, muere" {
     	game.onTick(1, "ataque", {})
     	game.addVisual(heroChat)
 		hero.recibirDanio(100)
         assert.that(hero.muerto())
     }
 
-    /*test "Si el heroe compra ataque, el ataque aumenta" {
+    /*test "Si el hero compra ataque, el ataque aumenta" {
         game.addVisual(heroChat)
         hero.agarrarMonedas(100)
         itemTienda1.item(new BuffAtaque())
@@ -34,7 +32,7 @@ describe "tests del juego" {
         assert.that(hero.ataque() > 30)
     }
     
-    test "Si el heroe compra defensa, la defensa aumenta" {
+    test "Si el hero compra defensa, la defensa aumenta" {
         game.addVisual(heroChat)
         hero.agarrarMonedas(100)
         itemTienda1.item(new BuffDefensa())
@@ -43,7 +41,7 @@ describe "tests del juego" {
         assert.that(hero.defensa() > 0)
     }
     
-    test "Si el heroe compra velocidad, la velocidad aumenta" {
+    test "Si el hero compra velocidad, la velocidad aumenta" {
         game.addVisual(heroChat)
         hero.agarrarMonedas(100)
         itemTienda1.item(new BuffVelocidad())
@@ -52,7 +50,7 @@ describe "tests del juego" {
         assert.that(hero.lentitud() < 3)
     }
     
-    test "Si el heroe compra critico, la probabilidad de critico aumenta" {
+    test "Si el hero compra critico, la probabilidad de crítico aumenta" {
         game.addVisual(heroChat)
         hero.agarrarMonedas(100)
         itemTienda1.item(new BuffCritico())
@@ -61,7 +59,7 @@ describe "tests del juego" {
         assert.that(hero.probCritico() > 5)
     }
     
-    test "Si el heroe compra esquive, la probabilidad de esquive aumenta" {
+    test "Si el hero compra esquive, la probabilidad de esquive aumenta" {
         game.addVisual(heroChat)
         hero.agarrarMonedas(100)
         itemTienda1.item(new BuffEsquive())
@@ -70,24 +68,24 @@ describe "tests del juego" {
         assert.that(hero.probEsquive() > 5)
     }*/
     
-    test "Cuando el heroe compra una habilidad, la habilidad esta disponible para ser usada" {
+    test "Cuando el hero compra una habilidad, la habilidad está disponible para ser usada" {
         mamporro.comprada(true)
         assert.equals(mamporro.image(), "habilidad1.png")
     }
     
-    test "Cuando el heroe usa la habilidad disparo, el danio que recibe el enemigo es el doble del ataque del heroe" {
+    test "Cuando el hero usa la habilidad disparo, el daño que recibe el enemigo es el doble del ataque del hero" {
        	disparo.comprada(true)
         hero.usarHabilidad(disparo)
         assert.equals(escenario.enemigo().vida(), 100 - (hero.ataque() * 2 - escenario.enemigo().especie().defensa()))
     }
     
-    test "Cuando el heroe usa la habilidad superCritico, aumenta en 50% la probabilidad de critico" {
+    test "Cuando el hero usa la habilidad superCritico, aumenta un 50% su probabilidad de crítico" {
        	superCritico.comprada(true)
         hero.usarHabilidad(superCritico)
         assert.equals(hero.probCritico(), 55)
     }
     
-    test "Cuando el heroe usa la habilidad mamporro, el danio que recibe el enemigo es el triple del ataque del heroe" {
+    test "Cuando el hero usa la habilidad mamporro, el daño que recibe el enemigo es el triple del ataque del hero" {
        	mamporro.comprada(true)
         hero.usarHabilidad(mamporro)
         assert.equals(escenario.enemigo().vida(), 100 - (hero.ataque() * 3 - escenario.enemigo().especie().defensa()))
