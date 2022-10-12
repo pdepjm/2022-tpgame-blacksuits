@@ -1,6 +1,6 @@
 # "Clicker Hero"
 
-## Equipo de desarrollo
+## Equipo de Desarrollo
 
 - Franco Modesto
 - Matias Oliva
