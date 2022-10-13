@@ -79,28 +79,10 @@ object heroBarraVida {
 	method image() = image
 	
 	method actualizarBarraVida() {
-		if(hero.vida() > 90){
-			image = "barra_vida100.png"
-		} else if(hero.vida() <= 90 && hero.vida() > 80){
-			image = "barra_vida90.png"
-		} else if(hero.vida() <= 80 && hero.vida() > 70){
-			image = "barra_vida80.png"
-		} else if(hero.vida() <= 70 && hero.vida() > 60){
-			image = "barra_vida70.png"
-		} else if(hero.vida() <= 60 && hero.vida() > 50){
-			image = "barra_vida60.png"
-		} else if(hero.vida() <= 50 && hero.vida() > 40){
-			image = "barra_vida50.png"
-		} else if(hero.vida() <= 40 && hero.vida() > 30){
-			image = "barra_vida40.png"
-		} else if(hero.vida() <= 30 && hero.vida() > 20){
-			image = "barra_vida30.png"
-		} else if(hero.vida() <= 20 && hero.vida() > 10){
-			image = "barra_vida20.png"
-		} else if(hero.vida() <= 10 && hero.vida() > 0) {
+		if(hero.vida() < 10 && hero.vida() > 0){
 			image = "barra_vida10.png"
 		} else {
-			image = "barra_vida0.png"
+			image = "barra_vida" + ((hero.vida()/10).truncate(0)*10) + ".png"			
 		}
 	}
 }
@@ -204,7 +186,7 @@ object hero {
 	var lentitud = 3 /* Máx. 4 */
 	var defensa = 0
 	var probEsquive = 5
-	var monedero = 0
+	var monedero = 1000
 	
 	var puedeAtacar = true
 	var muerto = false
@@ -326,11 +308,11 @@ object hero {
 			} else {
 				if((danio - defensa) > 0){
 					vida -= (danio - defensa)
-					heroBarraVida.actualizarBarraVida()
 					if (vida <= 0) {
 					vida = 0
 					self.morir()
 					}
+					heroBarraVida.actualizarBarraVida()
 				}
 			}
 	}
@@ -355,28 +337,10 @@ object enemigoBarraVida {
 	method image() = image
 	
 	method actualizarBarraVida() {
-		if(escenario.enemigo().vida() > 90){
-			image = "barra_vida_inv100.png"
-		} else if(escenario.enemigo().vida() <= 90 && escenario.enemigo().vida() > 80){
-			image = "barra_vida_inv90.png"
-		} else if(escenario.enemigo().vida() <= 80 && escenario.enemigo().vida() > 70){
-			image = "barra_vida_inv80.png"
-		} else if(escenario.enemigo().vida() <= 70 && escenario.enemigo().vida() > 60){
-			image = "barra_vida_inv70.png"
-		} else if(escenario.enemigo().vida() <= 60 && escenario.enemigo().vida() > 50){
-			image = "barra_vida_inv60.png"
-		} else if(escenario.enemigo().vida() <= 50 && escenario.enemigo().vida() > 40){
-			image = "barra_vida_inv50.png"
-		} else if(escenario.enemigo().vida() <= 40 && escenario.enemigo().vida() > 30){
-			image = "barra_vida_inv40.png"
-		} else if(escenario.enemigo().vida() <= 30 && escenario.enemigo().vida() > 20){
-			image = "barra_vida_inv30.png"
-		} else if(escenario.enemigo().vida() <= 20 && escenario.enemigo().vida() > 10){
-			image = "barra_vida_inv20.png"
-		} else if(escenario.enemigo().vida() <= 10 && escenario.enemigo().vida() > 0) {
+		if(escenario.enemigo().vida() < 10 && escenario.enemigo().vida() > 0){
 			image = "barra_vida_inv10.png"
 		} else {
-			image = "barra_vida0.png"
+			image = "barra_vida_inv" + ((escenario.enemigo().vida()/10).truncate(0)*10) + ".png"			
 		}
 	}
 }
@@ -454,11 +418,11 @@ class Enemigo {
 	method recibirDanio(danio) {
 		if((danio - especie.defensa()) > 0) {
 			vida -= (danio - especie.defensa())
-			enemigoBarraVida.actualizarBarraVida()
 			if (vida <= 0) {
 				vida = 0
 				self.morir()
 			}
+			enemigoBarraVida.actualizarBarraVida()
 		}
 	}
 	
@@ -482,16 +446,10 @@ class Boss inherits Enemigo {
 	const item
 	
 	override method morir(){
-		game.removeTickEvent("ataque")
-		game.schedule((especie.lentitud() * 1000)/2 + 1, {image = especie.deadImage()})
-		game.schedule((especie.lentitud() * 1000)/2 + 1, {self.soltarMonedas()})
+		super()
 		game.schedule((especie.lentitud() * 1000)/2 + 100, {game.addVisual(item)})
-		game.schedule(3000, {game.removeVisual(escenario.enemigo())})
-		game.schedule(3000, {game.removeVisual(monedas)})
 		game.schedule(3000, {game.removeVisual(item)})
 		game.schedule(3000, {item.serAgarrado()})
-		game.schedule(3000, {hero.agarrarMonedas(monedas.cantidad())})
-		game.schedule(4000, {escenario.siguienteRonda()})
 	}
 }
 
