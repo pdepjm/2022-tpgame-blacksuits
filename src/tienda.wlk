@@ -171,7 +171,7 @@ class BuffDefensa inherits Item(image = "itemDefensa.png", nombre = "una mejora 
 	override method defensa() = 10
 }
 
-class BuffCombinado inherits Item(image = "itemCombinado.png", nombre = "un boost de Ataque y Defensa", precio = 2 * escenario.ronda()) {
+class BuffCombinado inherits Item(image = "itemCombinado.png", nombre = "Ataque y Defensa", precio = 2 * escenario.ronda()) {
 	override method ataque() = 10
 	override method defensa() = 10
 }
