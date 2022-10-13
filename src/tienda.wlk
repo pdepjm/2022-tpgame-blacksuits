@@ -139,20 +139,8 @@ class Item {
 	method image() = image
 	method nombre() = nombre
 	method precio() = precio
-	method vida() = 0
-	method ataque() = 0
-	method probCritico() = 0
-	method lentitud() = 0
-	method defensa() = 0
-	method probEsquive() = 0
 	
 	method serAgarrado() {
-		hero.vida(self.vida())
-		hero.ataque(self.ataque())
-		hero.probCritico(self.probCritico())
-		hero.lentitud(self.lentitud())
-		hero.defensa(self.defensa())
-		hero.probEsquive(self.probEsquive())
 		game.say(heroChat, "Obtuve " + self.nombre() + "!")
 	}
 }
@@ -160,30 +148,51 @@ class Item {
 object itemNulo inherits Item(image = "") {}
 
 class BuffVida inherits Item(image = "itemVida.png", nombre = "una poción de Vida", precio = 2 * escenario.ronda()) {
-	override method vida() = (25.randomUpTo(50+1)).truncate(0)
+	override method serAgarrado() {
+		super()
+		hero.vida((25.randomUpTo(50+1)).truncate(0))
+	}
 }
 
 class BuffAtaque inherits Item(image = "itemAtaque.png", nombre = "un boost de Ataque", precio = 2 * escenario.ronda()) {
-	override method ataque() = 10
+	override method serAgarrado() {
+		super()
+		hero.ataque(10)
+	}
 }
 
 class BuffDefensa inherits Item(image = "itemDefensa.png", nombre = "una mejora de Defensa", precio = 2 * escenario.ronda()) {
-	override method defensa() = 10
+	override method serAgarrado() {
+		super()
+		hero.defensa(10)
+	}
 }
 
 class BuffCombinado inherits Item(image = "itemCombinado.png", nombre = "Ataque y Defensa", precio = 2 * escenario.ronda()) {
-	override method ataque() = 10
-	override method defensa() = 10
+	override method serAgarrado() {
+		super()
+		hero.ataque(10)
+		hero.defensa(10)
+	}
 }
 
 class BuffVelocidad inherits Item(image = "itemVelocidad.png", nombre = "una mejora de Velocidad", precio = 5 * escenario.ronda()) {
-	override method lentitud() = 0.25
+	override method serAgarrado() {
+		super()
+		hero.lentitud(0.25)
+	}
 }
 
 class BuffCritico inherits Item(image = "itemCritico.png", nombre = "un aumento de Crítico", precio = 5 * escenario.ronda()) {
-	override method probCritico() = 5
+	override method serAgarrado() {
+		super()
+		hero.probCritico(5)
+	}
 }
 
 class BuffEsquive inherits Item(image = "itemEsquive.png", nombre = "un aumento de Esquive", precio = 5 * escenario.ronda()) {
-	override method probEsquive() = 5
+	override method serAgarrado() {
+		super()
+		hero.probEsquive(5)
+	}
 }
