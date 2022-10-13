@@ -186,7 +186,7 @@ object hero {
 	var lentitud = 3 /* Máx. 4 */
 	var defensa = 0
 	var probEsquive = 5
-	var monedero = 1000
+	var monedero = 0
 	
 	var puedeAtacar = true
 	var muerto = false
