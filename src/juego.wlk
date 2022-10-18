@@ -5,9 +5,21 @@ import tienda.*
 import habilidades.*
 
 object juego {
+	var musica = game.sound("")
+	
+	method musica() = musica
+	
 	method iniciar() {
 		self.hacerConfiguracionInicial()
+		self.iniciarMusica("music_inicio.mp3", 0.2)
 		game.start()
+	}
+	
+	method iniciarMusica(music, vol) {
+		musica = game.sound(music)
+		musica.shouldLoop(true)
+		musica.volume(vol)
+		game.schedule(100, {musica.play()})
 	}
 	
 	method hacerConfiguracionInicial() {
@@ -28,6 +40,8 @@ object juego {
 	
 	method start() {
 		game.clear()
+		musica.stop()
+		self.iniciarMusica("music_battle.mp3", 0.2)
 		self.agregarPersonajes()
 		self.configurarTeclas()
 		escenario.enemigo().iniciarAtaques()

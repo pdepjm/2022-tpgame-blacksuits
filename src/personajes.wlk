@@ -1,4 +1,5 @@
 import wollok.game.*
+import juego.*
 import tienda.*
 
 /* Escenario */
@@ -186,7 +187,7 @@ object hero {
 	var image = idleImage
 	var position = game.at(3,2)
 	
-	var vida = 100
+	var vida = 10
 	var ataque = 30
 	var probCritico = 5
 	var lentitud = 3 /* Máx. 4 */
@@ -329,6 +330,8 @@ object hero {
 		game.removeVisual(heroChat)
 		game.schedule(1000 + 1, {position = game.at(1,2)})
 		game.schedule(1000 + 1, {image = "hero_dead.png"})
+		game.schedule(1000 + 1, {juego.musica().stop()})
+		game.schedule(1000 + 1, {juego.iniciarMusica("music_death.mp3", 0.1)})
 		game.schedule(2000, {game.addVisual(pantallaMuerte)})
 	}
 }
