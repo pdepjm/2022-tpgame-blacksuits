@@ -12,11 +12,15 @@ object selector {
 	method image() = image
 	
 	method moverDerecha() {
-		position = position.right(1)
+		if(!hero.muerto()){
+			position = position.right(1)
+		}
 	}
 	
 	method moverIzquierda() {
-		position = position.left(1)
+		if(!hero.muerto()){
+			position = position.left(1)
+		}
 	}
 	
 	method itemSeleccionado() = itemSeleccionado
