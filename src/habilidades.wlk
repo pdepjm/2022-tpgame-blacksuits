@@ -11,11 +11,15 @@ object selectorH {
 	method image() = image
 	
 	method moverArriba() {
-		position = position.up(1)
+		if(!hero.muerto()){
+			position = position.up(1)
+		}
 	}
 	
 	method moverAbajo() {
-		position = position.down(1)
+		if(!hero.muerto()){
+			position = position.down(1)
+		}
 	}
 	
 	method habilidadSeleccionada() = habilidadSeleccionada
