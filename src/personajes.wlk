@@ -331,7 +331,7 @@ object hero {
 		game.schedule(1500 + 1, {position = game.at(1,2)})
 		game.schedule(1500 + 1, {image = "hero_dead.png"})
 		game.schedule(1500 + 1, {juego.musica().stop()})
-		game.schedule(1500 + 10, {juego.iniciarMusica("music_death.mp3", 0.1)})
+		game.schedule(1500 + 10, {juego.iniciarMusica("music_death.mp3")})
 		game.schedule(2000, {game.addVisual(pantallaMuerte)})
 	}
 }

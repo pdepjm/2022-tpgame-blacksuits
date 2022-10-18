@@ -5,22 +5,34 @@ import tienda.*
 import habilidades.*
 
 object juego {
-	var musica = game.sound("")
+	var musica
+	var volumen = 0.2
 	
 	method musica() = musica
 	
 	method iniciar() {
 		self.hacerConfiguracionInicial()
-		self.iniciarMusica("music_inicio.mp3", 0.2)
 		game.start()
 	}
 	
-	method iniciarMusica(music, vol) {
+	method iniciarMusica(music) {
 		musica = game.sound(music)
 		musica.shouldLoop(true)
-		musica.volume(vol)
+		musica.volume(volumen)
 		game.schedule(100, {musica.play()})
 	}
+	
+	method mutear(){
+        if(volumen > 0){
+            volumen = 0
+            musica.volume(volumen)
+            muteLogo.image("muted.png")
+        } else {
+            volumen = 0.2
+            musica.volume(volumen)
+            muteLogo.image("unmuted.png")
+        }
+    }
 	
 	method hacerConfiguracionInicial() {
 		game.title("Clicker Hero")
@@ -28,11 +40,20 @@ object juego {
 		game.height(10)
 		game.cellSize(70)
 		game.addVisual(blackSuits)
-		game.schedule(3000, {self.pantallaInicial()})
+		game.schedule(4000, {self.pantallaInstrucciones()})
+		game.schedule(7000, {self.iniciarMusica("music_inicio.mp3")})
+		game.schedule(10000, {self.pantallaInicial()})
+		game.schedule(10000, {keyboard.m().onPressDo({self.mutear()})})
+		game.schedule(10000, {game.addVisual(muteLogo)})
+	}
+	
+	method pantallaInstrucciones(){
+		game.removeVisual(blackSuits)
+		game.addVisual(instrucciones)
 	}
 	
 	method pantallaInicial(){
-		game.removeVisual(blackSuits)
+		game.removeVisual(instrucciones)
 		game.addVisual(pantallaInicio)
 		game.onTick(1000, "pressTextBlink", {pantallaInicio.blink()})
 		keyboard.enter().onPressDo({self.start()})
@@ -41,7 +62,7 @@ object juego {
 	method start() {
 		game.clear()
 		musica.stop()
-		self.iniciarMusica("music_battle.mp3", 0.2)
+		self.iniciarMusica("music_battle.mp3")
 		self.agregarPersonajes()
 		self.configurarTeclas()
 		escenario.enemigo().iniciarAtaques()
@@ -60,6 +81,7 @@ object juego {
 		game.addVisual(escenarioFondo)
 		game.addVisual(escenarioRondaLabel)
 		game.addVisual(escenarioRonda)
+		game.addVisual(muteLogo)
 	}
 	
 	method dibujarStats() {
@@ -105,6 +127,8 @@ object juego {
 		keyboard.space().onPressDo({selectorH.comprar()})
 		keyboard.up().onPressDo({selectorH.moverArriba()})
 		keyboard.down().onPressDo({selectorH.moverAbajo()})
+		
+		keyboard.m().onPressDo({self.mutear()})
 	}
 	
 	method configurarTienda() {
@@ -129,6 +153,16 @@ object juego {
 	}
 }
 
+object blackSuits {
+	method position() = game.at(0,0)
+	method image() = "blackSuits.jpg"
+}
+
+object instrucciones {
+	method position() = game.at(0,0)
+	method image() = "instrucciones.jpg"
+}
+
 object pantallaInicio {
 	var image = "fondo_inicio_text.jpg"
 	
@@ -141,7 +175,13 @@ object pantallaInicio {
 	}
 }
 
-object blackSuits {
+object muteLogo {
+	var image = "unmuted.png"
+	
 	method position() = game.at(0,0)
-	method image() = "blackSuits.jpg"
+	method image() = image
+	
+	method image(_image) {
+		image = _image
+	}
 }
