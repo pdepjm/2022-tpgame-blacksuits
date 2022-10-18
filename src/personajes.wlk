@@ -17,6 +17,12 @@ object escenarioRondaLabel {
 	method position() = game.at(4,9)
 	method image() = "label2.png"
 }
+
+object pantallaMuerte {
+	method position() = game.at(0,0)
+	method image() = "gameOver.png"
+}
+
 object escenario {
 	const especies = [esqueleto, fantasma, mago, helado, demonio]
 	var ronda = 1
@@ -323,7 +329,7 @@ object hero {
 		game.removeVisual(heroChat)
 		game.schedule(1000 + 1, {position = game.at(1,2)})
 		game.schedule(1000 + 1, {image = "hero_dead.png"})
-		/* game.schedule(5000, {game.stop()}) */
+		game.schedule(2000, {game.addVisual(pantallaMuerte)})
 	}
 }
 

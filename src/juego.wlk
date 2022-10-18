@@ -15,6 +15,19 @@ object juego {
 		game.width(11)
 		game.height(10)
 		game.cellSize(70)
+		game.addVisual(blackSuits)
+		game.schedule(3000, {self.pantallaInicial()})
+	}
+	
+	method pantallaInicial(){
+		game.removeVisual(blackSuits)
+		game.addVisual(pantallaInicio)
+		game.onTick(1000, "pressTextBlink", {pantallaInicio.blink()})
+		keyboard.enter().onPressDo({self.start()})
+	}
+	
+	method start() {
+		game.clear()
 		self.agregarPersonajes()
 		self.configurarTeclas()
 		escenario.enemigo().iniciarAtaques()
@@ -100,4 +113,21 @@ object juego {
 		game.whenCollideDo(limiteInferior, {sel => sel.moverArriba()})
 		game.whenCollideDo(limiteSuperior, {sel => sel.moverAbajo()})
 	}
+}
+
+object pantallaInicio {
+	var image = "fondo_inicio_text.jpg"
+	
+	method position() = game.at(0,0)
+	method image() = image
+	
+	method blink(){
+		image = "fondo_inicio.jpg"
+		game.schedule(500, {image = "fondo_inicio_text.jpg"})
+	}
+}
+
+object blackSuits {
+	method position() = game.at(0,0)
+	method image() = "blackSuits.jpg"
 }
