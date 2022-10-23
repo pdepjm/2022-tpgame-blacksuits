@@ -16,11 +16,10 @@
 
 ![captura 1](Screen_1.png)
 ![captura 2](Screen_2.png)
-![captura 3](Screen_3.png)
 ![captura 4](Screen_4.png)
-![captura 5](Screen_5.png)
 ![captura 6](Screen_6.png)
 ![captura 7](Screen_7.png)
+![captura 3](Screen_3.png)
 
 ## Reglas de Juego / Instrucciones
 
