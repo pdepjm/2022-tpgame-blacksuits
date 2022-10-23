@@ -23,7 +23,7 @@
 
 ## Reglas de Juego / Instrucciones
 
-![instrucciones](screen1.jpg)
+![instrucciones](capturas/screen1.jpg)
 
 ## Otros
 
