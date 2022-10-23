@@ -18,7 +18,7 @@
 
 ## Reglas de Juego / Instrucciones
 
-(Escribirlas)
+![Instrucciones](instrucciones.jpg)
 
 ## Otros
 
