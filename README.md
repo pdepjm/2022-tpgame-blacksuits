@@ -14,16 +14,16 @@
 
 ## Capturas
 
-![captura 1](Capturas./Screen_1.png)
-![captura 2](Capturas./Screen_2.png)
-![captura 4](Capturas./Screen_4.png)
-![captura 6](Capturas./Screen_6.png)
-![captura 7](Capturas./Screen_7.png)
-![captura 3](Capturas./Screen_3.png)
+![captura 2](capturas/screen2.jpg)
+![captura 3](capturas/screen3.jpg)
+![captura 4](capturas/screen4.jpg)
+![captura 5](capturas/screen5.jpg)
+![captura 6](capturas/screen6.jpg)
+![captura 7](capturas/screen7.jpg)
 
 ## Reglas de Juego / Instrucciones
 
-![Instrucciones](instrucciones.jpg)
+![instrucciones](screen1.jpg)
 
 ## Otros
 
