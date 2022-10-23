@@ -14,12 +14,12 @@
 
 ## Capturas
 
-![captura 1](Screen_1.png)
-![captura 2](Screen_2.png)
-![captura 4](Screen_4.png)
-![captura 6](Screen_6.png)
-![captura 7](Screen_7.png)
-![captura 3](Screen_3.png)
+![captura 1](Capturas./Screen_1.png)
+![captura 2](Capturas./Screen_2.png)
+![captura 4](Capturas./Screen_4.png)
+![captura 6](Capturas./Screen_6.png)
+![captura 7](Capturas./Screen_7.png)
+![captura 3](Capturas./Screen_3.png)
 
 ## Reglas de Juego / Instrucciones
 
