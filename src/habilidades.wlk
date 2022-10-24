@@ -3,12 +3,11 @@ import personajes.*
 
 /* Tienda de Habilidades */
 object selectorH {
-	var habilidadSeleccionada
+	var property habilidadSeleccionada = habilidadNula
 	var position = game.at(10, tiendaH.origenTienda() + 2)
-	const image = "selector.png"
+	const property image = "selector.png"
 	
 	method position() = position
-	method image() = image
 	
 	method moverArriba() {
 		if(!hero.muerto()){
@@ -20,12 +19,6 @@ object selectorH {
 		if(!hero.muerto()){
 			position = position.down(1)
 		}
-	}
-	
-	method habilidadSeleccionada() = habilidadSeleccionada
-	
-	method habilidadSeleccionada(habilidad) {
-		habilidadSeleccionada = habilidad
 	}
 	
 	method comprar() {
@@ -59,18 +52,12 @@ object tiendaH {
 
 class HabilidadTienda {
 	var posY
-	var habilidad
+	var property habilidad
 	
 	method position() = game.at(10, posY)
 	method image() = habilidad.image()
 	method text() = "   " + habilidad.precio()
 	method textColor() = "FFCE30"
-	
-	method habilidad() = habilidad
-	
-	method habilidad(_habilidad) {
-		habilidad = _habilidad
-	}
 }
 
 const habilidadTienda1 = new HabilidadTienda(habilidad = disparo, posY = tiendaH.origenTienda() + 2)
@@ -97,7 +84,7 @@ class Habilidad {
 	const lightImage = ""
 	var puedeSerUsada = true
 	var cooldown = 0
-	const precio = 0
+	const property precio = 0
 	var comprada = false
 	
 	method position() = game.at(10, posY)
@@ -105,7 +92,6 @@ class Habilidad {
 	method text() = "   " + self.cooldown()/1000
 	method textColor() = "CA5CDD"
 	
-	method precio() = precio
 	method comprada() = comprada
 	method habilidad() = self
 	

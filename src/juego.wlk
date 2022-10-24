@@ -176,12 +176,7 @@ object pantallaInicio {
 }
 
 object muteLogo {
-	var image = "unmuted.png"
+	var property image = "unmuted.png"
 	
 	method position() = game.at(0,0)
-	method image() = image
-	
-	method image(_image) {
-		image = _image
-	}
 }

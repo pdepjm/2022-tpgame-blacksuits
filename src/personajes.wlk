@@ -27,16 +27,11 @@ object pantallaMuerte {
 object escenario {
 	const especies = [esqueleto, fantasma, mago, helado, demonio]
 	var ronda = 1
-	var indice = 1
+	var property indice = 1
 	const cantEnemigos = especies.size()
 	var enemigo = new Enemigo(especie = esqueleto)
 	
 	method ronda() = ronda
-	method indice() = indice
-	
-	method indice(_indice) {
-		indice = _indice
-	}
 
 	method enemigo() = enemigo
 	
@@ -64,13 +59,7 @@ object escenario {
 
 /* Monedas */
 object monedas {
-	var cantidad = 0
-	
-	method cantidad() = cantidad
-	
-	method cantidad(_cantidad) {
-		cantidad = _cantidad
-	}
+	var property cantidad = 0
 
 	method position() = game.at(5,2)
 	method image() = "monedas.png"
@@ -168,24 +157,18 @@ object heroEscudoEsquive {
 }
 
 object heroChat {
-	var position =  game.at(3,3)
-	
-	method position() = position
-	
-	method position(_position) {
-		position = _position
-	}
+	var property position =  game.at(3,3)
 }
 
 object hero {
-	var idleImage = "hero.png"
+	var property idleImage = "hero.png"
 	var atkImage = "hero_atk.png"
 	var critImage = "hero_atk_crit.png"
-	var disparoImage = "disparo.png"
-	var mamporroImage = "mamporro.png"
+	var property disparoImage = "disparo.png"
+	var property mamporroImage = "mamporro.png"
 	
-	var image = idleImage
-	var position = game.at(3,2)
+	var property image = idleImage
+	var property position = game.at(3,2)
 	
 	var vida = 100
 	var ataque = 30
@@ -193,18 +176,10 @@ object hero {
 	var lentitud = 3 /* Máx. 4 */
 	var defensa = 0
 	var probEsquive = 5
-	var monedero = 0
+	var monedero = 1000
 	
 	var puedeAtacar = true
 	var muerto = false
-	
-	method idleImage() = idleImage
-	method disparoImage() = disparoImage
-	method mamporroImage() = mamporroImage
-	
-	method idleImage(_idleImage){
-		idleImage = _idleImage
-	}
 	
 	method atkImage(_atkImage){
 		atkImage = _atkImage
@@ -214,17 +189,6 @@ object hero {
 		critImage = _critImage
 	}
 	
-	method disparoImage(_disparoImage){
-		disparoImage = _disparoImage
-	}
-	
-	method mamporroImage(_mamporroImage){
-		mamporroImage = _mamporroImage
-	}
-
-	method position() = position
-	method image() = image
-	
 	method vida() = vida
 	method ataque() = ataque
 	method probCritico() = probCritico
@@ -233,14 +197,6 @@ object hero {
 	method probEsquive() = probEsquive
 	method monedero() = monedero
 	method muerto() = muerto
-	
-	method position(_position){
-		position = _position
-	}
-	
-	method image(_image){
-		image = _image
-	}
 	
 	method vida(_vida) {
 		vida = 100.min(vida + _vida)
@@ -397,22 +353,16 @@ object enemigoVelocidadIcon {
 }
 
 class Enemigo {
-	const especie
+	const property especie
 	var vida = especie.vida()
 	
 	var image = especie.originalImage()
-	const position = especie.posicion()
+	const position = especie.position()
 	
 	method position() = position
 	method image() = image
 	
-	method especie() {
-		return especie
-	}
-	
-	method vida() {
-		return vida
-	}
+	method vida() = vida
 	
 	method iniciarAtaques() {
 		game.onTick(especie.lentitud() * 1000, "ataque", {self.atacar()})
@@ -465,22 +415,17 @@ class Boss inherits Enemigo {
 
 /* Especies */
 class Especie {
-	const position
+	const property position
 	const ataque
-	const lentitud /* Máx. 4 */
+	const property lentitud /* Máx. 4 */
 	const defensa
-	const originalImage
-	const atkImage
-	const deadImage
+	const property originalImage
+	const property atkImage
+	const property deadImage
 	
-	method posicion() = position
 	method vida() = 100
 	method ataque() = ataque * escenario.ronda()
-	method lentitud() = lentitud
 	method defensa() = defensa * escenario.ronda()
-	method originalImage() = originalImage
-	method atkImage() = atkImage
-	method deadImage() = deadImage
 }
 
 const esqueleto = new Especie(position = game.at(5,2), ataque = 6, lentitud = 1.5, defensa = 5, originalImage = "enemy3.png", atkImage = "enemy3_atk.png", deadImage = "enemy3_dead.png")

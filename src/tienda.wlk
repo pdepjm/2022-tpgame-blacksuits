@@ -4,12 +4,11 @@ import personajes.*
 
 /* Tienda */
 object selector {
-	var itemSeleccionado
+	var property itemSeleccionado = itemNulo
 	var position = game.at(tienda.origenTienda(), 0)
-	const image = "selector.png"
+	const property image = "selector.png"
 	
 	method position() = position
-	method image() = image
 	
 	method moverDerecha() {
 		if(!hero.muerto()){
@@ -21,12 +20,6 @@ object selector {
 		if(!hero.muerto()){
 			position = position.left(1)
 		}
-	}
-	
-	method itemSeleccionado() = itemSeleccionado
-	
-	method itemSeleccionado(item) {
-		itemSeleccionado = item
 	}
 	
 	method comprar() {
@@ -101,18 +94,12 @@ object tienda {
 
 class ItemTienda {
 	var posX
-	var item = itemNulo
+	var property item = itemNulo
 	
 	method position() = game.at(posX, 0)
 	method image() = item.image()
 	method text() = "" + item.precio()
 	method textColor() = "FFCE30"
-	
-	method item() = item
-	
-	method item(_item) {
-		item = _item
-	}
 }
 
 const itemTienda1 = new ItemTienda(posX = tienda.origenTienda())
@@ -135,14 +122,11 @@ object limiteDerecho{
 
 /* Items */
 class Item {
-	const image
-	const nombre = ""
-	const precio = 0
+	const property image
+	const property nombre = ""
+	const property precio = 0
 	
 	method position() = game.at(5,2)
-	method image() = image
-	method nombre() = nombre
-	method precio() = precio
 	
 	method serAgarrado() {
 		game.say(heroChat, "Obtuve " + self.nombre() + "!")
