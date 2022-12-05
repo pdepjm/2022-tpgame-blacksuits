@@ -35,4 +35,4 @@ Clicker Hero es un clicker-rpg en el que un héroe elegido se enfrentará a atem
 - UTN K2004/K2104
 - Versión de Wollok: 3.0.0
 - Una vez terminado, no tenemos problemas en que el repositorio sea público.
-- Gráficos por: https://chierit.itch.io
+- Assets gráficos por: https://chierit.itch.io
