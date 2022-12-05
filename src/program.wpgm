@@ -1,0 +1,5 @@
+import juego.*
+
+program clickerHero {
+	juego.iniciar()
+}
